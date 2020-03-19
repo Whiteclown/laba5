@@ -1,11 +1,13 @@
 package views;
 
+import Bees.Bee;
 import Habitat.Habitat;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 
 public class FirstFrame extends JFrame implements KeyListener {
     private final String beginButtonText = "Begin";
@@ -35,6 +37,10 @@ public class FirstFrame extends JFrame implements KeyListener {
         setResizable(true);
     }
 
+    public void beesDraw(ArrayList<Bee> bees){
+        firstPanel.paintBee(bees);
+    }
+
     public void updateTime(int time){
         this.time = time;
         timeLabel.setText(time / 60 + ":" + time % 60);
@@ -47,7 +53,14 @@ public class FirstFrame extends JFrame implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-
+        switch (e.getKeyCode()){
+            case KeyEvent.VK_B:
+                habitat.startBorn();
+                break;
+            case KeyEvent.VK_E:
+                habitat.stopBorn();
+            break;
+        }
     }
 
     @Override

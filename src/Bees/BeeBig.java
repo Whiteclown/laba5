@@ -19,7 +19,7 @@ public class BeeBig extends Bee {
 
     static {
         try {
-            image = ImageIO.read(new File("src/pictures/UsualBee.jpg"));
+            image = ImageIO.read(new File("src/pictures/BeeWork.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
