@@ -11,7 +11,7 @@ public class BeeBig extends Bee {
     public static int countBeeBig = 0;
     public static Image image;
 
-    BeeBig(int x, int y, String pathToImg){
+    public BeeBig(int x, int y, String pathToImg){
         super(x, y, pathToImg);
         countBeeBig++;
         countBees++;
@@ -19,7 +19,7 @@ public class BeeBig extends Bee {
 
     static {
         try {
-            image = ImageIO.read(new File("src/pictures/BeeWork.png"));
+            image = ImageIO.read(new File("src/pictures/BeeBig.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }

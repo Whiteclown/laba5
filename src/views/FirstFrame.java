@@ -14,9 +14,10 @@ public class FirstFrame extends JFrame implements KeyListener {
     FirstPanel firstPanel;
     Habitat habitat;
     JLabel timeLabel;
+    boolean timeVisible = true;
     int time;
     public FirstFrame(){
-        habitat = new Habitat(1,2, 100, 50, this);
+        habitat = new Habitat(5,3, 0.8, 0.5, this);
         firstPanel = new FirstPanel();
 
         setTitle("Bees");
@@ -59,7 +60,14 @@ public class FirstFrame extends JFrame implements KeyListener {
                 break;
             case KeyEvent.VK_E:
                 habitat.stopBorn();
-            break;
+                break;
+            case KeyEvent.VK_T:
+                if (timeVisible == true)
+                    timeVisible = false;
+                else
+                    timeVisible = true;
+                timeLabel.setVisible(timeVisible);
+                break;
         }
     }
 
