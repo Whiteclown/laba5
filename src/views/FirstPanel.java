@@ -1,8 +1,6 @@
 package views;
 
 import Bees.Bee;
-import Bees.BeeBig;
-import Bees.BeeWork;
 
 import javax.swing.*;
 import java.awt.*;

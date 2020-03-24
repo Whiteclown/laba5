@@ -4,7 +4,6 @@ import Bees.Bee;
 import Bees.BeeBig;
 import Bees.BeeWork;
 import views.FirstFrame;
-import views.FirstPanel;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -17,7 +16,6 @@ public class Habitat {
     private double P; // вероятность рождения рабочих пчел
     private double K;   // проценты для расчета вероятности рождения трутней
     FirstFrame firstFrame;
-    FirstPanel firstPanel;
     private int WIDTH = 600;
     private int HEIGHT = 600;
     int time = 0;
@@ -58,13 +56,13 @@ public class Habitat {
     public void update(int time){
         if ((Math.random() <= P) && (time % N2 == 0)){
             Point rPoint = generatePoint();
-            Bee mBee = new BeeWork(rPoint.x, rPoint.y, pathToWork);
+            Bee mBee = new BeeWork(rPoint.x, rPoint.y);
             beesList.add(mBee);
         }
         if (BeeWork.countBeeWork != 0){
             if (((((double)BeeBig.countBeeBig) / BeeWork.countBeeWork) < K) && (time % N1 == 0)){
                 Point rPoint = generatePoint();
-                Bee mBee = new BeeBig(rPoint.x, rPoint.y, pathToBig);
+                Bee mBee = new BeeBig(rPoint.x, rPoint.y);
                 beesList.add(mBee);
             }
         }

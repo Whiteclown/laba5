@@ -12,7 +12,6 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 public class FirstFrame extends JFrame implements KeyListener {
-    private final String beginButtonText = "Begin";
     FirstPanel firstPanel;
     Habitat habitat;
     JLabel timeLabel;
@@ -68,10 +67,8 @@ public class FirstFrame extends JFrame implements KeyListener {
                 Bee.countBees = 0;
                 break;
             case KeyEvent.VK_T:
-                if (timeVisible == true)
-                    timeVisible = false;
-                else
-                    timeVisible = true;
+
+                    timeVisible = !timeVisible;
                 timeLabel.setVisible(timeVisible);
                 break;
         }
@@ -88,8 +85,8 @@ public class FirstFrame extends JFrame implements KeyListener {
         jPanelDialog.setLayout(new BoxLayout(jPanelDialog, BoxLayout.Y_AXIS));
         jDialog.setContentPane(jPanelDialog);
 
-        Font font = new Font("Georgia", Font.BOLD, 15);
-        Font font1 = new Font("Georgia", Font.ITALIC, 15);
+        Font font = new Font("Courier", Font.BOLD, 15);
+        Font font1 = new Font("Courier", Font.ITALIC, 15);
         JLabel jLabelBees = new JLabel("Bees: " + Bee.countBees, SwingConstants.CENTER);
         jLabelBees.setFont(font);
         jPanelDialog.add(jLabelBees);
