@@ -24,12 +24,7 @@ public class FirstPanel extends JPanel {
         super.paint(g);
         for (int i = 0; i < bees.size(); i++){
             Bee bee = bees.get(i);
-            if (bee instanceof BeeWork){
-                g.drawImage(BeeWork.image, bee.getX(), bee.getY(), null);
-            }
-            else {
-                g.drawImage(BeeBig.image, bee.getX(), bee.getY(), null);
-            }
+            g.drawImage(bee.getImage(), bee.getX(), bee.getY(), null);
         }
     }
 }

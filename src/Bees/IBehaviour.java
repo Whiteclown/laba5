@@ -1,5 +1,7 @@
 package Bees;
 
+import java.awt.*;
+
 public interface IBehaviour {
     int getX();
     int getY();

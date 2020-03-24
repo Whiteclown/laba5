@@ -49,9 +49,9 @@ public class Habitat {
         return HEIGHT;
     }
 
-    private Point generatePoint(){  //Разобрать!
-        int x =(int)(Math.random() * (firstFrame.getWidth() - 99));
-        int y =(int)(Math.random() * (firstFrame.getHeight() - 99));
+    private Point generatePoint(){
+        int x =(int)(Math.random() * (firstFrame.getWidth() - 100));
+        int y =(int)(Math.random() * (firstFrame.getHeight() -100));
         return new Point(x, y);
     }
 
