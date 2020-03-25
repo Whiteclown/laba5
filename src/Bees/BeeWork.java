@@ -10,7 +10,7 @@ public class BeeWork extends Bee {
     static public Image image;
 
     public BeeWork(int x, int y){
-        super(x, y, image);
+        super(x, y);
         countBeeWork++;
         countBees++;
     }
@@ -21,5 +21,10 @@ public class BeeWork extends Bee {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Image getImage() {
+        return image;
     }
 }

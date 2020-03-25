@@ -19,8 +19,6 @@ public class Habitat {
     private int WIDTH = 600;
     private int HEIGHT = 600;
     int time = 0;
-    final private String pathToBig = "src/pictures/BeeBig.png";
-    final private String pathToWork = "src/pictures/BeeWork.png";
     private ArrayList<Bee> beesList = new ArrayList<>();
     private Timer timer = new Timer();
     private TimerTask timerTask = new TimerTask() {

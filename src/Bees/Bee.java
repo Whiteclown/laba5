@@ -6,12 +6,10 @@ abstract public class Bee implements IBehaviour{
     private int x;
     private int y;
     public static int countBees = 0;
-    private Image image;
 
-    Bee(int x, int y, Image image){
+    Bee(int x, int y){
         this.x = x;
         this.y = y;
-        this.image = image;
     }
 
     @Override
@@ -37,7 +35,5 @@ abstract public class Bee implements IBehaviour{
         this.y = y;
     }
 
-    public Image getImage() {
-        return image;
-    }
+    public abstract Image getImage();
 }
