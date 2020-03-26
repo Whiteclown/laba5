@@ -35,6 +35,7 @@ public class Habitat {
         this.P = P;
         this.K = K;
         this.firstFrame = firstFrame;
+        firstFrame.setFocusable(true);
     }
 
     public int getWIDTH() {

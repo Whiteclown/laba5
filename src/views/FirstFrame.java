@@ -15,11 +15,13 @@ public class FirstFrame extends JFrame implements KeyListener {
     FirstPanel firstPanel;
     Habitat habitat;
     JLabel timeLabel;
+    JButton buttonBegin;
     boolean timeVisible = true;
     int time;
     public FirstFrame(){
         habitat = new Habitat(5,3, 0.8, 0.5, this);
         firstPanel = new FirstPanel();
+        JPanel secondPanel = new JPanel();
 
         setTitle("Bees");
         setPreferredSize(new Dimension(habitat.getWIDTH(), habitat.getHEIGHT()));
@@ -27,11 +29,20 @@ public class FirstFrame extends JFrame implements KeyListener {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         firstPanel.setPreferredSize(new Dimension(habitat.getWIDTH(), habitat.getHEIGHT()));
+        firstPanel.setBackground(Color.PINK);
+
         add(firstPanel);
         addKeyListener(this);
 
         timeLabel = new JLabel(" ", SwingConstants.CENTER);
-        add(timeLabel, BorderLayout.SOUTH);
+        add(timeLabel, BorderLayout.NORTH);
+
+        secondPanel.setSize(new Dimension(120, 120));
+        secondPanel.setLayout(new BoxLayout(secondPanel, BoxLayout.Y_AXIS));
+        secondPanel.setBackground(Color.GRAY);
+        buttonBegin = new JButton("Begin");
+        secondPanel.add(buttonBegin);
+        add(secondPanel, BorderLayout.EAST);
 
         pack();
         setLocationRelativeTo(null);
