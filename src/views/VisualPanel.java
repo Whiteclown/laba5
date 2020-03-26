@@ -6,9 +6,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class FirstPanel extends JPanel {
+public class VisualPanel extends JPanel {
     ArrayList<Bee> bees = new ArrayList<>();
-    public FirstPanel(){
+    public VisualPanel(){
         super();
     }
 

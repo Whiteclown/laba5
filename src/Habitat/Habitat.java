@@ -47,8 +47,8 @@ public class Habitat {
     }
 
     private Point generatePoint(){
-        int x =(int)(Math.random() * (firstFrame.getWidth() - 100));
-        int y =(int)(Math.random() * (firstFrame.getHeight() -100));
+        int x =(int)(Math.random() * (firstFrame.getVisualPanelWidth()));
+        int y =(int)(Math.random() * (firstFrame.getVisualPanelHeight()));
         return new Point(x, y);
     }
 

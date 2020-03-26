@@ -4,6 +4,7 @@ import Bees.Bee;
 import Bees.BeeBig;
 import Bees.BeeWork;
 import Habitat.Habitat;
+import org.w3c.dom.DOMImplementation;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,37 +13,40 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 public class FirstFrame extends JFrame implements KeyListener {
-    FirstPanel firstPanel;
+    VisualPanel visualPanel;
+    ControlPanel controlPanel;
     Habitat habitat;
     JLabel timeLabel;
-    JButton buttonBegin;
     boolean timeVisible = true;
     int time;
     public FirstFrame(){
         habitat = new Habitat(5,3, 0.8, 0.5, this);
-        firstPanel = new FirstPanel();
-        JPanel secondPanel = new JPanel();
+        visualPanel = new VisualPanel();
+        controlPanel = new ControlPanel();
+
 
         setTitle("Bees");
-        setPreferredSize(new Dimension(habitat.getWIDTH(), habitat.getHEIGHT()));
+        Dimension dimensionFirstFrame = new Dimension(habitat.getWIDTH(), habitat.getHEIGHT());
+        setPreferredSize(dimensionFirstFrame);
         setLayout(new BorderLayout());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        firstPanel.setPreferredSize(new Dimension(habitat.getWIDTH(), habitat.getHEIGHT()));
-        firstPanel.setBackground(Color.PINK);
 
-        add(firstPanel);
+        Dimension controlSize = new Dimension(100, dimensionFirstFrame.height);
+        controlPanel.setPreferredSize(controlSize);
+        controlPanel.setLayout(new FlowLayout());
+        controlPanel.setBackground(Color.ORANGE);
+        add(controlPanel, BorderLayout.EAST);
+
+        visualPanel.setPreferredSize(new Dimension(dimensionFirstFrame.width - controlSize.width, dimensionFirstFrame.height));
+        visualPanel.setLayout(new FlowLayout());
+        visualPanel.setBackground(Color.PINK);
+        add(visualPanel);
+
         addKeyListener(this);
 
         timeLabel = new JLabel(" ", SwingConstants.CENTER);
         add(timeLabel, BorderLayout.NORTH);
-
-        secondPanel.setSize(new Dimension(120, 120));
-        secondPanel.setLayout(new BoxLayout(secondPanel, BoxLayout.Y_AXIS));
-        secondPanel.setBackground(Color.GRAY);
-        buttonBegin = new JButton("Begin");
-        secondPanel.add(buttonBegin);
-        add(secondPanel, BorderLayout.EAST);
 
         pack();
         setLocationRelativeTo(null);
@@ -51,7 +55,7 @@ public class FirstFrame extends JFrame implements KeyListener {
     }
 
     public void beesDraw(ArrayList<Bee> bees){
-        firstPanel.paintBee(bees);
+        visualPanel.paintBee(bees);
     }
 
     public void updateTime(int time){
@@ -116,4 +120,13 @@ public class FirstFrame extends JFrame implements KeyListener {
         jDialog.setLocationRelativeTo(this);
         jDialog.setVisible(true);
     }
+
+    public int getVisualPanelWidth(){
+        return visualPanel.getWidth();
+    }
+
+    public int getVisualPanelHeight(){
+        return visualPanel.getHeight();
+    }
+
 }
