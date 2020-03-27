@@ -52,6 +52,10 @@ public class Habitat {
     }
 
     public void update(int time){
+        N1 = firstFrame.getN1();
+        N2 = firstFrame.getN2();
+        P = firstFrame.getP();
+        K = firstFrame.getK();
         if ((Math.random() <= P) && (time % N2 == 0)){
             Point rPoint = generatePoint();
             Bee mBee = new BeeWork(rPoint.x, rPoint.y);
