@@ -43,9 +43,10 @@ public class FirstFrame extends JFrame implements KeyListener {
 
         //Панель интерфейса
         Dimension controlSize = new Dimension(150, dimensionFirstFrame.height);
+        Color colorControlPanel = new Color(64, 64, 222);
         controlPanel.setPreferredSize(controlSize);
         controlPanel.setLayout(new FlowLayout());
-        controlPanel.setBackground(Color.ORANGE);
+        controlPanel.setBackground(colorControlPanel);
         add(controlPanel, BorderLayout.EAST);
         buttonBegin = new JButton("Begin");
         buttonBegin.addActionListener(beginActionListener);
@@ -57,18 +58,21 @@ public class FirstFrame extends JFrame implements KeyListener {
         buttonStop.setEnabled(false);
         controlPanel.add(buttonStop);
         JCheckBox jCheckBoxShowInfo = new JCheckBox("Show information");
-        jCheckBoxShowInfo.setBackground(Color.ORANGE);
+        jCheckBoxShowInfo.setBackground(colorControlPanel);
         jCheckBoxShowInfo.setFocusable(false);
+        jCheckBoxShowInfo.setForeground(Color.LIGHT_GRAY);
         jCheckBoxShowInfo.addItemListener(showInfoItemListener);
         controlPanel.add(jCheckBoxShowInfo);
         buttonGroup = new ButtonGroup();
         jRadioButtonShowTime = new JRadioButton("Show time", true);
-        jRadioButtonShowTime.setBackground(Color.ORANGE);
+        jRadioButtonShowTime.setBackground(colorControlPanel);
         jRadioButtonShowTime.setFocusable(false);
+        jRadioButtonShowTime.setForeground(Color.LIGHT_GRAY);
         jRadioButtonShowTime.addActionListener(showTimeActionListener);
         jRadioButtonHideTime = new JRadioButton("Hide Time", false);
-        jRadioButtonHideTime.setBackground(Color.ORANGE);
+        jRadioButtonHideTime.setBackground(colorControlPanel);
         jRadioButtonHideTime.setFocusable(false);
+        jRadioButtonHideTime.setForeground(Color.LIGHT_GRAY);
         jRadioButtonHideTime.addActionListener(hideTimeActionListener);
         buttonGroup.add(jRadioButtonShowTime);
         buttonGroup.add(jRadioButtonHideTime);
@@ -78,7 +82,7 @@ public class FirstFrame extends JFrame implements KeyListener {
         //панель визуализации
         visualPanel.setPreferredSize(new Dimension(dimensionFirstFrame.width - controlSize.width, dimensionFirstFrame.height));
         visualPanel.setLayout(new FlowLayout());
-        visualPanel.setBackground(Color.PINK);
+        visualPanel.setBackground(new Color(56, 56, 181));
         add(visualPanel);
 
         //Меню
