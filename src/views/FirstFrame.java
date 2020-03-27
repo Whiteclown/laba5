@@ -8,6 +8,8 @@ import org.w3c.dom.DOMImplementation;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
@@ -31,17 +33,41 @@ public class FirstFrame extends JFrame implements KeyListener {
         setLayout(new BorderLayout());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-
-        Dimension controlSize = new Dimension(100, dimensionFirstFrame.height);
+        //Панель интерфейса
+        Dimension controlSize = new Dimension(150, dimensionFirstFrame.height);
         controlPanel.setPreferredSize(controlSize);
         controlPanel.setLayout(new FlowLayout());
         controlPanel.setBackground(Color.ORANGE);
         add(controlPanel, BorderLayout.EAST);
+        JButton buttonBegin = new JButton("Begin");
+        controlPanel.add(buttonBegin);
+        JButton buttonStop = new JButton("Stop");
+        controlPanel.add(buttonStop);
+        JCheckBox jCheckBoxShowInfo = new JCheckBox("Show information");
+        jCheckBoxShowInfo.setBackground(Color.ORANGE);
+        controlPanel.add(jCheckBoxShowInfo);
+        ButtonGroup buttonGroup = new ButtonGroup();
+        JRadioButton jRadioButtonShowTime = new JRadioButton("Show time", true);
+        jRadioButtonShowTime.setBackground(Color.ORANGE);
+        JRadioButton jRadioButtonHideTime = new JRadioButton("Hide Time", false);
+        jRadioButtonHideTime.setBackground(Color.ORANGE);
+        buttonGroup.add(jRadioButtonShowTime);
+        buttonGroup.add(jRadioButtonHideTime);
+        controlPanel.add(jRadioButtonShowTime);
+        controlPanel.add(jRadioButtonHideTime);
 
+        //панель визуализации
         visualPanel.setPreferredSize(new Dimension(dimensionFirstFrame.width - controlSize.width, dimensionFirstFrame.height));
         visualPanel.setLayout(new FlowLayout());
         visualPanel.setBackground(Color.PINK);
         add(visualPanel);
+
+        //Меню
+        JMenuBar jMenuBar = new JMenuBar();
+        jMenuBar.add(createMenuFile());
+        jMenuBar.setSize(200, 200);
+        jMenuBar.setVisible(true);
+        setJMenuBar(jMenuBar);
 
         addKeyListener(this);
 
@@ -129,4 +155,39 @@ public class FirstFrame extends JFrame implements KeyListener {
         return visualPanel.getHeight();
     }
 
+    private JMenu createMenuFile(){
+        JMenu file = new JMenu("Файл");
+        JMenuItem open = new JMenuItem("Открыть");
+        JMenuItem exit = new JMenuItem(new ExitAction());
+        file.add(open);
+        file.addSeparator();
+        file.add(exit);
+
+
+        //Разобрать
+        open.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                System.out.println ("ActionListener.actionPerformed : open");
+            }
+        });
+
+        return file;
+    }
+
+    class ExitAction extends AbstractAction{
+        ExitAction(){
+            putValue(NAME, "Выход");
+        }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.exit(0);
+        }
+    }
+
+    private JMenu createViewMenu(){
+        JMenu viewMenu = new JMenu("Вид");
+        return viewMenu;
+    }
 }
