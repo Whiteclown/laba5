@@ -8,10 +8,7 @@ import org.w3c.dom.DOMImplementation;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 public class FirstFrame extends JFrame implements KeyListener {
@@ -19,12 +16,20 @@ public class FirstFrame extends JFrame implements KeyListener {
     ControlPanel controlPanel;
     Habitat habitat;
     JLabel timeLabel;
+    JButton buttonBegin;
+    JButton buttonStop;
     boolean timeVisible = true;
     int time;
+    boolean isShowInfo = false;
     public FirstFrame(){
         habitat = new Habitat(5,3, 0.8, 0.5, this);
         visualPanel = new VisualPanel();
         controlPanel = new ControlPanel();
+        BeginActionListener beginActionListener = new BeginActionListener();
+        StopActionListener stopActionListener = new StopActionListener();
+        ShowTimeActionListener showTimeActionListener = new ShowTimeActionListener();
+        HideTimeActionListener hideTimeActionListener = new HideTimeActionListener();
+        ShowInfoItemListener showInfoItemListener = new ShowInfoItemListener();
 
 
         setTitle("Bees");
@@ -39,18 +44,24 @@ public class FirstFrame extends JFrame implements KeyListener {
         controlPanel.setLayout(new FlowLayout());
         controlPanel.setBackground(Color.ORANGE);
         add(controlPanel, BorderLayout.EAST);
-        JButton buttonBegin = new JButton("Begin");
+        buttonBegin = new JButton("Begin");
+        buttonBegin.addActionListener(beginActionListener);
         controlPanel.add(buttonBegin);
-        JButton buttonStop = new JButton("Stop");
+        buttonStop = new JButton("Stop");
+        buttonStop.addActionListener(stopActionListener);
+        buttonStop.setEnabled(false);
         controlPanel.add(buttonStop);
         JCheckBox jCheckBoxShowInfo = new JCheckBox("Show information");
         jCheckBoxShowInfo.setBackground(Color.ORANGE);
+        jCheckBoxShowInfo.addItemListener(showInfoItemListener);
         controlPanel.add(jCheckBoxShowInfo);
         ButtonGroup buttonGroup = new ButtonGroup();
         JRadioButton jRadioButtonShowTime = new JRadioButton("Show time", true);
         jRadioButtonShowTime.setBackground(Color.ORANGE);
+        jRadioButtonShowTime.addActionListener(showTimeActionListener);
         JRadioButton jRadioButtonHideTime = new JRadioButton("Hide Time", false);
         jRadioButtonHideTime.setBackground(Color.ORANGE);
+        jRadioButtonHideTime.addActionListener(hideTimeActionListener);
         buttonGroup.add(jRadioButtonShowTime);
         buttonGroup.add(jRadioButtonHideTime);
         controlPanel.add(jRadioButtonShowTime);
@@ -78,6 +89,7 @@ public class FirstFrame extends JFrame implements KeyListener {
         setLocationRelativeTo(null);
         setVisible(true);
         setResizable(true);
+        setFocusable(true);
     }
 
     public void beesDraw(ArrayList<Bee> bees){
@@ -102,7 +114,9 @@ public class FirstFrame extends JFrame implements KeyListener {
                 break;
             case KeyEvent.VK_E:
                 habitat.stopBorn();
-                createDialogWindow();
+                if (isShowInfo){
+                    createDialogWindow();
+                }
                 BeeWork.countBeeWork = 0;
                 BeeBig.countBeeBig = 0;
                 Bee.countBees = 0;
@@ -189,5 +203,55 @@ public class FirstFrame extends JFrame implements KeyListener {
     private JMenu createViewMenu(){
         JMenu viewMenu = new JMenu("Вид");
         return viewMenu;
+    }
+
+    class BeginActionListener implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            habitat.startBorn();
+            buttonBegin.setEnabled(false);
+            buttonStop.setEnabled(true);
+        }
+    }
+
+    class StopActionListener implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            habitat.stopBorn();
+            buttonBegin.setEnabled(true);
+            buttonStop.setEnabled(false);
+            if (isShowInfo){
+                createDialogWindow();
+            }
+            BeeWork.countBeeWork = 0;
+            BeeBig.countBeeBig = 0;
+            Bee.countBees = 0;
+        }
+    }
+
+    class ShowTimeActionListener implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            timeLabel.setVisible(true);
+        }
+    }
+
+    class HideTimeActionListener implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            timeLabel.setVisible(false);
+        }
+    }
+
+    class ShowInfoItemListener implements ItemListener{
+
+        @Override
+        public void itemStateChanged(ItemEvent e) {
+            isShowInfo = !isShowInfo;
+        }
     }
 }
