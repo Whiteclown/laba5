@@ -18,6 +18,9 @@ public class FirstFrame extends JFrame implements KeyListener {
     JLabel timeLabel;
     JButton buttonBegin;
     JButton buttonStop;
+    ButtonGroup buttonGroup;
+    JRadioButton jRadioButtonShowTime;
+    JRadioButton jRadioButtonHideTime;
     boolean timeVisible = true;
     int time;
     boolean isShowInfo = false;
@@ -46,21 +49,26 @@ public class FirstFrame extends JFrame implements KeyListener {
         add(controlPanel, BorderLayout.EAST);
         buttonBegin = new JButton("Begin");
         buttonBegin.addActionListener(beginActionListener);
+        buttonBegin.setFocusable(false);
         controlPanel.add(buttonBegin);
         buttonStop = new JButton("Stop");
         buttonStop.addActionListener(stopActionListener);
+        buttonStop.setFocusable(false);
         buttonStop.setEnabled(false);
         controlPanel.add(buttonStop);
         JCheckBox jCheckBoxShowInfo = new JCheckBox("Show information");
         jCheckBoxShowInfo.setBackground(Color.ORANGE);
+        jCheckBoxShowInfo.setFocusable(false);
         jCheckBoxShowInfo.addItemListener(showInfoItemListener);
         controlPanel.add(jCheckBoxShowInfo);
-        ButtonGroup buttonGroup = new ButtonGroup();
-        JRadioButton jRadioButtonShowTime = new JRadioButton("Show time", true);
+        buttonGroup = new ButtonGroup();
+        jRadioButtonShowTime = new JRadioButton("Show time", true);
         jRadioButtonShowTime.setBackground(Color.ORANGE);
+        jRadioButtonShowTime.setFocusable(false);
         jRadioButtonShowTime.addActionListener(showTimeActionListener);
-        JRadioButton jRadioButtonHideTime = new JRadioButton("Hide Time", false);
+        jRadioButtonHideTime = new JRadioButton("Hide Time", false);
         jRadioButtonHideTime.setBackground(Color.ORANGE);
+        jRadioButtonHideTime.setFocusable(false);
         jRadioButtonHideTime.addActionListener(hideTimeActionListener);
         buttonGroup.add(jRadioButtonShowTime);
         buttonGroup.add(jRadioButtonHideTime);
@@ -111,9 +119,13 @@ public class FirstFrame extends JFrame implements KeyListener {
         switch (e.getKeyCode()){
             case KeyEvent.VK_B:
                 habitat.startBorn();
+                buttonBegin.setEnabled(false);
+                buttonStop.setEnabled(true);
                 break;
             case KeyEvent.VK_E:
                 habitat.stopBorn();
+                buttonBegin.setEnabled(true);
+                buttonStop.setEnabled(false);
                 if (isShowInfo){
                     createDialogWindow();
                 }
@@ -125,6 +137,9 @@ public class FirstFrame extends JFrame implements KeyListener {
 
                     timeVisible = !timeVisible;
                 timeLabel.setVisible(timeVisible);
+                buttonGroup.clearSelection();
+                jRadioButtonShowTime.setSelected(timeVisible);
+                jRadioButtonHideTime.setSelected(!timeVisible);
                 break;
         }
     }
@@ -244,6 +259,7 @@ public class FirstFrame extends JFrame implements KeyListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             timeLabel.setVisible(false);
+
         }
     }
 
