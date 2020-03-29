@@ -19,12 +19,19 @@ public class FirstFrame extends JFrame implements KeyListener {
     JButton buttonBegin;
     JButton buttonStop;
     ButtonGroup buttonGroup;
+    ButtonGroup buttonGroupMenu;
     JRadioButton jRadioButtonShowTime;
     JRadioButton jRadioButtonHideTime;
     JTextField jTextFieldN1;
     JTextField jTextFieldN2;
     JTextField jTextFieldP;
     JTextField jTextFieldK;
+    JCheckBox jCheckBoxShowInfo;
+    JCheckBoxMenuItem jCheckBoxMenuItemShowInfo;
+    JMenuItem jMenuItemBegin;
+    JMenuItem jMenuItemStop;
+    JRadioButtonMenuItem jRadioButtonMenuItemShowTime;
+    JRadioButtonMenuItem jRadioButtonMenuItemHideTime;
     boolean timeVisible = true;
     int time;
     boolean isShowInfo = false;
@@ -60,7 +67,7 @@ public class FirstFrame extends JFrame implements KeyListener {
         buttonStop.setFocusable(false);
         buttonStop.setEnabled(false);
         controlPanel.add(buttonStop);
-        JCheckBox jCheckBoxShowInfo = new JCheckBox("Итоговая информация");
+        jCheckBoxShowInfo = new JCheckBox("Итоговая информация");
         jCheckBoxShowInfo.setBackground(colorControlPanel);
         jCheckBoxShowInfo.setFocusable(false);
         jCheckBoxShowInfo.setForeground(Color.BLUE);
@@ -185,12 +192,14 @@ public class FirstFrame extends JFrame implements KeyListener {
                 Bee.countBees = 0;
                 break;
             case KeyEvent.VK_T:
-
-                    timeVisible = !timeVisible;
+                timeVisible = !timeVisible;
                 timeLabel.setVisible(timeVisible);
                 buttonGroup.clearSelection();
                 jRadioButtonShowTime.setSelected(timeVisible);
                 jRadioButtonHideTime.setSelected(!timeVisible);
+                buttonGroupMenu.clearSelection();
+                jRadioButtonMenuItemShowTime.setSelected(timeVisible);
+                jRadioButtonMenuItemHideTime.setSelected(!timeVisible);
                 break;
         }
     }
@@ -236,20 +245,90 @@ public class FirstFrame extends JFrame implements KeyListener {
     }
 
     private JMenu createMenuFile(){
-        JMenu file = new JMenu("Файл");
-        JMenuItem open = new JMenuItem("Открыть");
+        JMenu file = new JMenu("Настройки");
+        jMenuItemBegin = new JMenuItem("Начать");
         JMenuItem exit = new JMenuItem(new ExitAction());
-        file.add(open);
-        file.addSeparator();
+        jMenuItemStop = new JMenuItem("Стоп");
+        jMenuItemStop.setEnabled(false);
+        jCheckBoxMenuItemShowInfo = new JCheckBoxMenuItem("Показ информации");
+        buttonGroupMenu = new ButtonGroup();
+        jRadioButtonMenuItemShowTime = new JRadioButtonMenuItem("Показать время");
+        jRadioButtonMenuItemHideTime = new JRadioButtonMenuItem("Скрыть время");
+        buttonGroupMenu.add(jRadioButtonMenuItemShowTime);
+        buttonGroupMenu.add(jRadioButtonMenuItemHideTime);
+        jRadioButtonMenuItemShowTime.setSelected(true);
+        file.add(jMenuItemBegin);
+        file.add(jMenuItemStop);
+        file.add(jCheckBoxMenuItemShowInfo);
+        file.add(jRadioButtonMenuItemShowTime);
+        file.add(jRadioButtonMenuItemHideTime);
         file.add(exit);
 
 
         //Разобрать
-        open.addActionListener(new ActionListener()
+        jMenuItemBegin.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                System.out.println ("ActionListener.actionPerformed : open");
+                habitat.startBorn();
+                buttonBegin.setEnabled(false);
+                buttonStop.setEnabled(true);
+                jMenuItemBegin.setEnabled(false);
+                jMenuItemStop.setEnabled(true);
+                jTextFieldN1.setEditable(false);
+                jTextFieldN2.setEditable(false);
+                jTextFieldP.setEditable(false);
+                jTextFieldK.setEditable(false);
+            }
+        });
+
+        jMenuItemStop.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                habitat.stopBorn();
+                buttonBegin.setEnabled(true);
+                buttonStop.setEnabled(false);
+                jMenuItemBegin.setEnabled(true);
+                jMenuItemStop.setEnabled(false);
+                jTextFieldN1.setEditable(true);
+                jTextFieldN2.setEditable(true);
+                jTextFieldP.setEditable(true);
+                jTextFieldK.setEditable(true);
+                if (isShowInfo){
+                    createDialogWindow();
+                }
+                BeeWork.countBeeWork = 0;
+                BeeBig.countBeeBig = 0;
+                Bee.countBees = 0;
+            }
+        });
+
+        jCheckBoxMenuItemShowInfo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jCheckBoxShowInfo.setSelected(!isShowInfo);
+            }
+        });
+
+        jRadioButtonMenuItemShowTime.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                timeVisible = !timeVisible;
+                timeLabel.setVisible(timeVisible);
+                buttonGroup.clearSelection();
+                jRadioButtonShowTime.setSelected(timeVisible);
+                jRadioButtonHideTime.setSelected(!timeVisible);
+            }
+        });
+
+        jRadioButtonMenuItemHideTime.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                timeVisible = !timeVisible;
+                timeLabel.setVisible(timeVisible);
+                buttonGroup.clearSelection();
+                jRadioButtonShowTime.setSelected(timeVisible);
+                jRadioButtonHideTime.setSelected(!timeVisible);
             }
         });
 
@@ -282,6 +361,8 @@ public class FirstFrame extends JFrame implements KeyListener {
             jTextFieldN2.setEditable(false);
             jTextFieldP.setEditable(false);
             jTextFieldK.setEditable(false);
+            jMenuItemBegin.setEnabled(false);
+            jMenuItemStop.setEnabled(true);
         }
     }
 
@@ -296,6 +377,8 @@ public class FirstFrame extends JFrame implements KeyListener {
             jTextFieldN2.setEditable(true);
             jTextFieldP.setEditable(true);
             jTextFieldK.setEditable(true);
+            jMenuItemBegin.setEnabled(true);
+            jMenuItemStop.setEnabled(false);
             if (isShowInfo){
                 createDialogWindow();
             }
@@ -309,7 +392,11 @@ public class FirstFrame extends JFrame implements KeyListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            timeLabel.setVisible(true);
+            timeVisible = !timeVisible;
+            timeLabel.setVisible(timeVisible);
+            buttonGroupMenu.clearSelection();
+            jRadioButtonMenuItemShowTime.setSelected(timeVisible);
+            jRadioButtonMenuItemHideTime.setSelected(!timeVisible);
         }
     }
 
@@ -317,8 +404,11 @@ public class FirstFrame extends JFrame implements KeyListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            timeLabel.setVisible(false);
-
+            timeVisible = !timeVisible;
+            timeLabel.setVisible(timeVisible);
+            buttonGroupMenu.clearSelection();
+            jRadioButtonMenuItemShowTime.setSelected(timeVisible);
+            jRadioButtonMenuItemHideTime.setSelected(!timeVisible);
         }
     }
 
@@ -327,6 +417,7 @@ public class FirstFrame extends JFrame implements KeyListener {
         @Override
         public void itemStateChanged(ItemEvent e) {
             isShowInfo = !isShowInfo;
+            jCheckBoxMenuItemShowInfo.setState(isShowInfo);
         }
     }
 
