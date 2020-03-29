@@ -90,4 +90,17 @@ public class Habitat {
         beesList = new ArrayList<>();
         time = 0;
     }
+
+    public void pauseTimer(){
+        timer.cancel();
+        timer.purge();
+        timer = new Timer();
+        timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                time++;
+                update(time);
+            }
+        };
+    }
 }

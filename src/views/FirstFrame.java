@@ -30,6 +30,7 @@ public class FirstFrame extends JFrame implements KeyListener {
     JMenuItem jMenuItemStop;
     JRadioButtonMenuItem jRadioButtonMenuItemShowTime;
     JRadioButtonMenuItem jRadioButtonMenuItemHideTime;
+    boolean isContinue;
     JComboBox jComboBoxP;
     JComboBox jComboBoxK;
     String[] items = {
@@ -47,6 +48,7 @@ public class FirstFrame extends JFrame implements KeyListener {
     boolean timeVisible = true;
     int time;
     boolean isShowInfo = false;
+
     public FirstFrame(){
         habitat = new Habitat(5,3, 0.8, 0.5, this);
         visualPanel = new VisualPanel();
@@ -190,6 +192,14 @@ public class FirstFrame extends JFrame implements KeyListener {
                 this.requestFocus();
                 break;
             case KeyEvent.VK_E:
+                if (isShowInfo){
+                    habitat.pauseTimer();
+                    createDialogWindow();
+                    if (isContinue){
+                        habitat.startBorn();
+                        break;
+                    }
+                }
                 habitat.stopBorn();
                 jComboBoxP.setEnabled(true);
                 buttonBegin.setEnabled(true);
@@ -199,9 +209,6 @@ public class FirstFrame extends JFrame implements KeyListener {
                 jComboBoxK.setEnabled(true);
                 jMenuItemBegin.setEnabled(true);
                 jMenuItemStop.setEnabled(false);
-                if (isShowInfo){
-                    createDialogWindow();
-                }
                 BeeWork.countBeeWork = 0;
                 BeeBig.countBeeBig = 0;
                 Bee.countBees = 0;
@@ -242,9 +249,31 @@ public class FirstFrame extends JFrame implements KeyListener {
         jPanelDialog.add(jLabelBeeWork);
         jPanelDialog.add(jLabelBeeBig);
         jPanelDialog.add(new JLabel("Time: " + time / 60 + ":" + time % 60));
+        JButton jButtonOk = new JButton("ОК");
+        jButtonOk.setFocusable(false);
+        jButtonOk.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                isContinue = false;
+                jDialog.setVisible(false);
+                jDialog.dispose();
+            }
+        });
+        jPanelDialog.add(jButtonOk);
+        JButton jButtonCancel = new JButton("Отмена");
+        jButtonCancel.setFocusable(false);
+        jButtonCancel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                isContinue = true;
+                jDialog.setVisible(false);
+                jDialog.dispose();
+            }
+        });
+        jPanelDialog.add(jButtonCancel);
 
         jDialog.setDefaultCloseOperation(HIDE_ON_CLOSE);
-        jDialog.setPreferredSize(new Dimension(150, 150));
+        jDialog.setPreferredSize(new Dimension(150, 170));
         jDialog.setResizable(false);
         jDialog.pack();
         jDialog.setLocationRelativeTo(this);
@@ -300,6 +329,14 @@ public class FirstFrame extends JFrame implements KeyListener {
         jMenuItemStop.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (isShowInfo){
+                    habitat.pauseTimer();
+                    createDialogWindow();
+                    if (isContinue){
+                        habitat.startBorn();
+                        return;
+                    }
+                }
                 habitat.stopBorn();
                 buttonBegin.setEnabled(true);
                 buttonStop.setEnabled(false);
@@ -309,9 +346,6 @@ public class FirstFrame extends JFrame implements KeyListener {
                 jTextFieldN2.setEditable(true);
                 jComboBoxK.setEnabled(true);
                 jComboBoxP.setEnabled(true);
-                if (isShowInfo){
-                    createDialogWindow();
-                }
                 BeeWork.countBeeWork = 0;
                 BeeBig.countBeeBig = 0;
                 Bee.countBees = 0;
@@ -385,6 +419,14 @@ public class FirstFrame extends JFrame implements KeyListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            if (isShowInfo){
+                habitat.pauseTimer();
+                createDialogWindow();
+                if (isContinue){
+                    habitat.startBorn();
+                    return;
+                }
+            }
             habitat.stopBorn();
             buttonBegin.setEnabled(true);
             buttonStop.setEnabled(false);
@@ -394,9 +436,6 @@ public class FirstFrame extends JFrame implements KeyListener {
             jMenuItemBegin.setEnabled(true);
             jMenuItemStop.setEnabled(false);
             jComboBoxP.setEnabled(true);
-            if (isShowInfo){
-                createDialogWindow();
-            }
             BeeWork.countBeeWork = 0;
             BeeBig.countBeeBig = 0;
             Bee.countBees = 0;
