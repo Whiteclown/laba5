@@ -476,10 +476,24 @@ public class FirstFrame extends JFrame implements KeyListener {
     }
 
     public int getN1(){
+        try{
+            return Integer.valueOf(jTextFieldN1.getText());
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            createError();
+            jTextFieldN1.setText("5");
+        }
         return Integer.valueOf(jTextFieldN1.getText());
     }
 
     public int getN2(){
+        try{
+            return Integer.valueOf(jTextFieldN2.getText());
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            createError();
+            jTextFieldN2.setText("3");
+        }
         return Integer.valueOf(jTextFieldN2.getText());
     }
 
@@ -489,5 +503,21 @@ public class FirstFrame extends JFrame implements KeyListener {
 
     public double getK(){
         return ((double)(jComboBoxK.getSelectedIndex() + 1)) / 10;
+    }
+
+    public void createError(){
+        JDialog jDialogError = new JDialog(this, "Error!", true);
+        JPanel jPanelError = new JPanel();
+        jPanelError.setLayout(new BorderLayout());
+        JLabel jLabelError = new JLabel("<html>Неправильный формат данных!<Br>Выставлены значения по умолчанию.</html>");
+        jPanelError.add(jLabelError, BorderLayout.CENTER);
+        jDialogError.add(jPanelError);
+
+        jDialogError.setDefaultCloseOperation(HIDE_ON_CLOSE);
+        jDialogError.setPreferredSize(new Dimension(300, 100));
+        jDialogError.setResizable(false);
+        jDialogError.pack();
+        jDialogError.setLocationRelativeTo(this);
+        jDialogError.setVisible(true);
     }
 }
