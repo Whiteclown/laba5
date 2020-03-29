@@ -24,14 +24,26 @@ public class FirstFrame extends JFrame implements KeyListener {
     JRadioButton jRadioButtonHideTime;
     JTextField jTextFieldN1;
     JTextField jTextFieldN2;
-    JTextField jTextFieldP;
-    JTextField jTextFieldK;
     JCheckBox jCheckBoxShowInfo;
     JCheckBoxMenuItem jCheckBoxMenuItemShowInfo;
     JMenuItem jMenuItemBegin;
     JMenuItem jMenuItemStop;
     JRadioButtonMenuItem jRadioButtonMenuItemShowTime;
     JRadioButtonMenuItem jRadioButtonMenuItemHideTime;
+    JComboBox jComboBoxP;
+    JComboBox jComboBoxK;
+    String[] items = {
+            "10%",
+            "20%",
+            "30%",
+            "40%",
+            "50%",
+            "60%",
+            "70%",
+            "80%",
+            "90%",
+            "100%"
+    };
     boolean timeVisible = true;
     int time;
     boolean isShowInfo = false;
@@ -109,16 +121,15 @@ public class FirstFrame extends JFrame implements KeyListener {
         JLabel jLabelP = new JLabel("P рабочих");
         jLabelP.setPreferredSize(new Dimension(60, 20));
         controlPanel.add(jLabelP);
-        jTextFieldP = new JTextField("0.8");
-        jTextFieldP.setPreferredSize(new Dimension(40, 20));
-        controlPanel.add(jTextFieldP);
+        jComboBoxP = new JComboBox(items);
+        jComboBoxP.setPreferredSize(new Dimension(60, 20));
+        controlPanel.add(jComboBoxP);
         JLabel jLabelK = new JLabel("% трутней");
         jLabelK.setPreferredSize(new Dimension(60, 20));
         controlPanel.add(jLabelK);
-        jTextFieldK = new JTextField("0.1");
-        jTextFieldK.setPreferredSize(new Dimension(40, 20));
-        controlPanel.add(jTextFieldK);
-
+        jComboBoxK = new JComboBox(items);
+        jComboBoxK.setPreferredSize(new Dimension(60, 20));
+        controlPanel.add(jComboBoxK);
 
         //панель визуализации
         visualPanel.setPreferredSize(new Dimension(dimensionFirstFrame.width - controlSize.width, dimensionFirstFrame.height));
@@ -136,8 +147,8 @@ public class FirstFrame extends JFrame implements KeyListener {
         addKeyListener(this);
         jTextFieldN1.addKeyListener(this);
         jTextFieldN2.addKeyListener(this);
-        jTextFieldP.addKeyListener(this);
-        jTextFieldK.addKeyListener(this);
+        jComboBoxP.addKeyListener(this);
+        jComboBoxK.addKeyListener(this);
 
         timeLabel = new JLabel(" ", SwingConstants.CENTER);
         add(timeLabel, BorderLayout.NORTH);
@@ -167,23 +178,27 @@ public class FirstFrame extends JFrame implements KeyListener {
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()){
             case KeyEvent.VK_B:
-                habitat.startBorn();
+                jComboBoxP.setEnabled(false);
                 buttonBegin.setEnabled(false);
                 buttonStop.setEnabled(true);
                 jTextFieldN1.setEditable(false);
                 jTextFieldN2.setEditable(false);
-                jTextFieldP.setEditable(false);
-                jTextFieldK.setEditable(false);
+                jComboBoxK.setEnabled(false);
+                jMenuItemBegin.setEnabled(false);
+                jMenuItemStop.setEnabled(true);
+                habitat.startBorn();
                 this.requestFocus();
                 break;
             case KeyEvent.VK_E:
                 habitat.stopBorn();
+                jComboBoxP.setEnabled(true);
                 buttonBegin.setEnabled(true);
                 buttonStop.setEnabled(false);
                 jTextFieldN1.setEditable(true);
                 jTextFieldN2.setEditable(true);
-                jTextFieldP.setEditable(true);
-                jTextFieldK.setEditable(true);
+                jComboBoxK.setEnabled(true);
+                jMenuItemBegin.setEnabled(true);
+                jMenuItemStop.setEnabled(false);
                 if (isShowInfo){
                     createDialogWindow();
                 }
@@ -270,15 +285,15 @@ public class FirstFrame extends JFrame implements KeyListener {
         {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                habitat.startBorn();
                 buttonBegin.setEnabled(false);
                 buttonStop.setEnabled(true);
                 jMenuItemBegin.setEnabled(false);
                 jMenuItemStop.setEnabled(true);
                 jTextFieldN1.setEditable(false);
                 jTextFieldN2.setEditable(false);
-                jTextFieldP.setEditable(false);
-                jTextFieldK.setEditable(false);
+                jComboBoxK.setEnabled(false);
+                jComboBoxP.setEnabled(false);
+                habitat.startBorn();
             }
         });
 
@@ -292,8 +307,8 @@ public class FirstFrame extends JFrame implements KeyListener {
                 jMenuItemStop.setEnabled(false);
                 jTextFieldN1.setEditable(true);
                 jTextFieldN2.setEditable(true);
-                jTextFieldP.setEditable(true);
-                jTextFieldK.setEditable(true);
+                jComboBoxK.setEnabled(true);
+                jComboBoxP.setEnabled(true);
                 if (isShowInfo){
                     createDialogWindow();
                 }
@@ -354,15 +369,15 @@ public class FirstFrame extends JFrame implements KeyListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            habitat.startBorn();
             buttonBegin.setEnabled(false);
             buttonStop.setEnabled(true);
             jTextFieldN1.setEditable(false);
             jTextFieldN2.setEditable(false);
-            jTextFieldP.setEditable(false);
-            jTextFieldK.setEditable(false);
+            jComboBoxK.setEnabled(false);
             jMenuItemBegin.setEnabled(false);
             jMenuItemStop.setEnabled(true);
+            jComboBoxP.setEnabled(false);
+            habitat.startBorn();
         }
     }
 
@@ -375,10 +390,10 @@ public class FirstFrame extends JFrame implements KeyListener {
             buttonStop.setEnabled(false);
             jTextFieldN1.setEditable(true);
             jTextFieldN2.setEditable(true);
-            jTextFieldP.setEditable(true);
-            jTextFieldK.setEditable(true);
+            jComboBoxK.setEnabled(true);
             jMenuItemBegin.setEnabled(true);
             jMenuItemStop.setEnabled(false);
+            jComboBoxP.setEnabled(true);
             if (isShowInfo){
                 createDialogWindow();
             }
@@ -430,10 +445,10 @@ public class FirstFrame extends JFrame implements KeyListener {
     }
 
     public double getP(){
-        return Double.valueOf(jTextFieldP.getText());
+        return ((double)(jComboBoxP.getSelectedIndex() + 1)) / 10;
     }
 
     public double getK(){
-        return Double.valueOf(jTextFieldK.getText());
+        return ((double)(jComboBoxK.getSelectedIndex() + 1)) / 10;
     }
 }
