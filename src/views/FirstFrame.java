@@ -162,8 +162,8 @@ public class FirstFrame extends JFrame implements KeyListener {
         setFocusable(true);
     }
 
-    public void beesDraw(ArrayList<Bee> bees){
-        visualPanel.paintBee(bees);
+    public void beesDraw(){
+        visualPanel.paintBee();
     }
 
     public void updateTime(int time){

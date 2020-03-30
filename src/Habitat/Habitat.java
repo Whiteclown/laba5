@@ -11,6 +11,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Habitat {
+    Singleton singleton = Singleton.getInstance();
     private int N1; //Bigers
     private int N2; //workers with P
     private double P; // вероятность рождения рабочих пчел
@@ -19,7 +20,6 @@ public class Habitat {
     private int WIDTH = 600;
     private int HEIGHT = 600;
     int time = 0;
-    private ArrayList<Bee> beesList = new ArrayList<>();
     private Timer timer = new Timer();
     private TimerTask timerTask = new TimerTask() {
         @Override
@@ -59,16 +59,16 @@ public class Habitat {
         if ((Math.random() <= P) && (time % N2 == 0)){
             Point rPoint = generatePoint();
             Bee mBee = new BeeWork(rPoint.x, rPoint.y);
-            beesList.add(mBee);
+            Singleton.beesList.add(mBee);
         }
         if (BeeWork.countBeeWork != 0){
             if (((((double)BeeBig.countBeeBig) / BeeWork.countBeeWork) < K) && (time % N1 == 0)){
                 Point rPoint = generatePoint();
                 Bee mBee = new BeeBig(rPoint.x, rPoint.y);
-                beesList.add(mBee);
+                Singleton.beesList.add(mBee);
             }
         }
-        firstFrame.beesDraw(beesList);
+        firstFrame.beesDraw();
         firstFrame.updateTime(time);
     }
 
@@ -87,7 +87,7 @@ public class Habitat {
                 update(time);
             }
         };
-        beesList = new ArrayList<>();
+        Singleton.beesList = new ArrayList<>();
         time = 0;
     }
 
