@@ -4,12 +4,15 @@ import Bees.Bee;
 import Bees.BeeBig;
 import Bees.BeeWork;
 import Habitat.Habitat;
-import org.w3c.dom.DOMImplementation;
+import Habitat.SingletonTimeBorn;
+import Habitat.SingletonID;
+import Habitat.SingletonObjects;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
 
 public class FirstFrame extends JFrame implements KeyListener {
     VisualPanel visualPanel;
@@ -35,6 +38,7 @@ public class FirstFrame extends JFrame implements KeyListener {
     JComboBox jComboBoxK;
     JTextField jTextFieldTimeOfLifeWork;
     JTextField jTextFieldTimeOfLifeBig;
+    JButton buttonCurrentObjects;
     String[] items = {
             "10%",
             "20%",
@@ -60,6 +64,7 @@ public class FirstFrame extends JFrame implements KeyListener {
         ShowTimeActionListener showTimeActionListener = new ShowTimeActionListener();
         HideTimeActionListener hideTimeActionListener = new HideTimeActionListener();
         ShowInfoItemListener showInfoItemListener = new ShowInfoItemListener();
+        CurrentObjectsActionListener currentObjectsActionListener = new CurrentObjectsActionListener();
 
         setTitle("Bees");
         Dimension dimensionFirstFrame = new Dimension(habitat.getWIDTH(), habitat.getHEIGHT());
@@ -150,6 +155,12 @@ public class FirstFrame extends JFrame implements KeyListener {
         jTextFieldTimeOfLifeBig = new JTextField("5");
         jTextFieldTimeOfLifeBig.setPreferredSize(new Dimension(40,20));
         controlPanel.add(jTextFieldTimeOfLifeBig);
+        //knopka
+        buttonCurrentObjects = new JButton("Текущие объекты");
+        buttonCurrentObjects.addActionListener(currentObjectsActionListener);
+        buttonCurrentObjects.setFocusable(false);
+        buttonCurrentObjects.setEnabled(true);
+        controlPanel.add(buttonCurrentObjects);
 
 
         //панель визуализации
@@ -475,6 +486,13 @@ public class FirstFrame extends JFrame implements KeyListener {
         }
     }
 
+    class CurrentObjectsActionListener implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            createCurrentObjectsDialog();
+        }
+    }
+
     class ShowTimeActionListener implements ActionListener{
 
         @Override
@@ -575,4 +593,42 @@ public class FirstFrame extends JFrame implements KeyListener {
         }
         return Integer.valueOf(jTextFieldTimeOfLifeBig.getText());
     }
+
+    public void createCurrentObjectsDialog() {
+        String text = "";
+        JDialog jDialog = new JDialog(this, "Текущие объекты", true);
+        jDialog.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        jDialog.setLayout(new FlowLayout());
+        jDialog.setPreferredSize(new Dimension(350, 200));
+        jDialog.setResizable(false);
+
+        JTextPane jTextPane = new JTextPane();
+        jTextPane.setFocusable(false);
+        jTextPane.setEditable(false);
+        jTextPane.setBackground(getContentPane().getBackground());
+        jTextPane.setFont(new Font("TimesRoman", Font.PLAIN, 14));
+
+        if (SingletonTimeBorn.beesMap.isEmpty()) {
+            jTextPane.setText("\n\n\nНет ни одного объекта");
+        }
+        else {
+            Set set = SingletonTimeBorn.beesMap.entrySet();
+            for (Object o : set) {
+                Map.Entry e = (Map.Entry) o;
+                text = text + "ID: " + e.getKey() + " Время рождения: " + e.getValue() + "\n";
+            }
+            jTextPane.setText(text);
+        }
+
+        JScrollPane jScrollPane = new JScrollPane(jTextPane);
+        jScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        jScrollPane.setPreferredSize(new Dimension(310, 150));
+        jScrollPane.setBorder(BorderFactory.createLineBorder(getBackground()));
+
+        jDialog.add(jScrollPane);
+        jDialog.pack();
+        jDialog.setLocationRelativeTo(this);
+        jDialog.setVisible(true);
+    }
+
 }
