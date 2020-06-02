@@ -1,15 +1,25 @@
 package Bees;
 
+import Habitat.SingletonID;
+
 import java.awt.*;
 
 abstract public class Bee implements IBehaviour{
     private int x;
     private int y;
+    private int id;
+    private int timeOfLife;
+    private int timeOfBorn;
     public static int countBees = 0;
 
-    Bee(int x, int y){
+    Bee(int x, int y, int timeOfLife, int timeOfBorn){
         this.x = x;
         this.y = y;
+        this.timeOfBorn = timeOfBorn;
+        this.timeOfLife = timeOfLife;
+        do {
+            this.id = (int)(Math.random() * 100000);
+        } while (SingletonID.beesSet.contains(this.id));
     }
 
     @Override
@@ -36,4 +46,24 @@ abstract public class Bee implements IBehaviour{
     }
 
     public abstract Image getImage();
+
+    public int getTimeOfLife() {
+        return timeOfLife;
+    }
+
+    public void setTimeOfLife(int timeOfLife) {
+        this.timeOfLife = timeOfLife;
+    }
+
+    public int getTimeOfBorn() {
+        return timeOfBorn;
+    }
+
+    public void setTimeOfBorn(int timeOfBorn) {
+        this.timeOfBorn = timeOfBorn;
+    }
+
+    public int getID(){
+        return id;
+    }
 }

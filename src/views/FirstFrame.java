@@ -33,6 +33,8 @@ public class FirstFrame extends JFrame implements KeyListener {
     boolean isContinue;
     JComboBox jComboBoxP;
     JComboBox jComboBoxK;
+    JTextField jTextFieldTimeOfLifeWork;
+    JTextField jTextFieldTimeOfLifeBig;
     String[] items = {
             "10%",
             "20%",
@@ -132,6 +134,23 @@ public class FirstFrame extends JFrame implements KeyListener {
         jComboBoxK = new JComboBox(items);
         jComboBoxK.setPreferredSize(new Dimension(60, 20));
         controlPanel.add(jComboBoxK);
+        //добавил
+        JLabel jLabelTimeOfLife = new JLabel("Время жизни:");
+        jLabelTimeOfLife.setPreferredSize(new Dimension(100, 20));
+        controlPanel.add(jLabelTimeOfLife);
+        JLabel jLabelTimeOfLifeWork = new JLabel("Рабочих:");
+        jLabelTimeOfLifeWork.setPreferredSize(new Dimension(60, 20));
+        controlPanel.add(jLabelTimeOfLifeWork);
+        jTextFieldTimeOfLifeWork = new JTextField("3");
+        jTextFieldTimeOfLifeWork.setPreferredSize(new Dimension(40,20));
+        controlPanel.add(jTextFieldTimeOfLifeWork);
+        JLabel jLabelTimeOfLifeBig = new JLabel("Трутней:");
+        jLabelTimeOfLifeBig.setPreferredSize(new Dimension(60, 20));
+        controlPanel.add(jLabelTimeOfLifeBig);
+        jTextFieldTimeOfLifeBig = new JTextField("5");
+        jTextFieldTimeOfLifeBig.setPreferredSize(new Dimension(40,20));
+        controlPanel.add(jTextFieldTimeOfLifeBig);
+
 
         //панель визуализации
         visualPanel.setPreferredSize(new Dimension(dimensionFirstFrame.width - controlSize.width, dimensionFirstFrame.height));
@@ -149,6 +168,8 @@ public class FirstFrame extends JFrame implements KeyListener {
         addKeyListener(this);
         jTextFieldN1.addKeyListener(this);
         jTextFieldN2.addKeyListener(this);
+        jTextFieldTimeOfLifeWork.addKeyListener(this);
+        jTextFieldTimeOfLifeBig.addKeyListener(this);
         jComboBoxP.addKeyListener(this);
         jComboBoxK.addKeyListener(this);
 
@@ -185,6 +206,8 @@ public class FirstFrame extends JFrame implements KeyListener {
                 buttonStop.setEnabled(true);
                 jTextFieldN1.setEditable(false);
                 jTextFieldN2.setEditable(false);
+                jTextFieldTimeOfLifeWork.setEditable(false);
+                jTextFieldTimeOfLifeBig.setEditable(false);
                 jComboBoxK.setEnabled(false);
                 jMenuItemBegin.setEnabled(false);
                 jMenuItemStop.setEnabled(true);
@@ -206,6 +229,8 @@ public class FirstFrame extends JFrame implements KeyListener {
                 buttonStop.setEnabled(false);
                 jTextFieldN1.setEditable(true);
                 jTextFieldN2.setEditable(true);
+                jTextFieldTimeOfLifeWork.setEditable(true);
+                jTextFieldTimeOfLifeBig.setEditable(true);
                 jComboBoxK.setEnabled(true);
                 jMenuItemBegin.setEnabled(true);
                 jMenuItemStop.setEnabled(false);
@@ -320,6 +345,8 @@ public class FirstFrame extends JFrame implements KeyListener {
                 jMenuItemStop.setEnabled(true);
                 jTextFieldN1.setEditable(false);
                 jTextFieldN2.setEditable(false);
+                jTextFieldTimeOfLifeWork.setEditable(false);
+                jTextFieldTimeOfLifeBig.setEditable(false);
                 jComboBoxK.setEnabled(false);
                 jComboBoxP.setEnabled(false);
                 habitat.startBorn();
@@ -344,6 +371,8 @@ public class FirstFrame extends JFrame implements KeyListener {
                 jMenuItemStop.setEnabled(false);
                 jTextFieldN1.setEditable(true);
                 jTextFieldN2.setEditable(true);
+                jTextFieldTimeOfLifeWork.setEditable(true);
+                jTextFieldTimeOfLifeBig.setEditable(true);
                 jComboBoxK.setEnabled(true);
                 jComboBoxP.setEnabled(true);
                 BeeWork.countBeeWork = 0;
@@ -407,6 +436,8 @@ public class FirstFrame extends JFrame implements KeyListener {
             buttonStop.setEnabled(true);
             jTextFieldN1.setEditable(false);
             jTextFieldN2.setEditable(false);
+            jTextFieldTimeOfLifeWork.setEditable(false);
+            jTextFieldTimeOfLifeBig.setEditable(false);
             jComboBoxK.setEnabled(false);
             jMenuItemBegin.setEnabled(false);
             jMenuItemStop.setEnabled(true);
@@ -432,6 +463,8 @@ public class FirstFrame extends JFrame implements KeyListener {
             buttonStop.setEnabled(false);
             jTextFieldN1.setEditable(true);
             jTextFieldN2.setEditable(true);
+            jTextFieldTimeOfLifeBig.setEditable(true);
+            jTextFieldTimeOfLifeWork.setEditable(true);
             jComboBoxK.setEnabled(true);
             jMenuItemBegin.setEnabled(true);
             jMenuItemStop.setEnabled(false);
@@ -519,5 +552,27 @@ public class FirstFrame extends JFrame implements KeyListener {
         jDialogError.pack();
         jDialogError.setLocationRelativeTo(this);
         jDialogError.setVisible(true);
+    }
+
+    public int getTimeOfLifeWork(){
+        try{
+            return Integer.valueOf(jTextFieldTimeOfLifeWork.getText());
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            createError();
+            jTextFieldTimeOfLifeWork.setText("3");
+        }
+        return Integer.valueOf(jTextFieldTimeOfLifeWork.getText());
+    }
+
+    public int getTimeOfLifeBig(){
+        try{
+            return Integer.valueOf(jTextFieldTimeOfLifeBig.getText());
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            createError();
+            jTextFieldTimeOfLifeBig.setText("5");
+        }
+        return Integer.valueOf(jTextFieldTimeOfLifeBig.getText());
     }
 }

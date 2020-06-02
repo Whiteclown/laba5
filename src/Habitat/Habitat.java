@@ -6,12 +6,12 @@ import Bees.BeeWork;
 import views.FirstFrame;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 public class Habitat {
-    Singleton singleton = Singleton.getInstance();
+    SingletonObjects singletonObjects = SingletonObjects.getInstance();
+    SingletonID singletonID = SingletonID.getInstance();
+    SingletonTimeBorn singletonTimeBorn = SingletonTimeBorn.getInstance();
     private int N1; //Bigers
     private int N2; //workers with P
     private double P; // вероятность рождения рабочих пчел
@@ -20,6 +20,8 @@ public class Habitat {
     private int WIDTH = 600;
     private int HEIGHT = 600;
     int time = 0;
+    int timeOfLifeWork = 3;
+    int timeOfLifeBig = 5;
     private Timer timer = new Timer();
     private TimerTask timerTask = new TimerTask() {
         @Override
@@ -56,18 +58,25 @@ public class Habitat {
         N2 = firstFrame.getN2();
         P = firstFrame.getP();
         K = firstFrame.getK();
+        timeOfLifeWork = firstFrame.getTimeOfLifeWork();
+        timeOfLifeBig = firstFrame.getTimeOfLifeBig();
         if ((Math.random() <= P) && (time % N2 == 0)){
             Point rPoint = generatePoint();
-            Bee mBee = new BeeWork(rPoint.x, rPoint.y);
-            Singleton.beesList.add(mBee);
+            Bee mBee = new BeeWork(rPoint.x, rPoint.y, timeOfLifeWork, time);
+            SingletonObjects.beesList.add(mBee);
+            SingletonID.beesSet.add(mBee.getID());
+            SingletonTimeBorn.beesMap.put(mBee.getID(), mBee.getTimeOfBorn());
         }
         if (BeeWork.countBeeWork != 0){
             if (((((double)BeeBig.countBeeBig) / BeeWork.countBeeWork) < K) && (time % N1 == 0)){
                 Point rPoint = generatePoint();
-                Bee mBee = new BeeBig(rPoint.x, rPoint.y);
-                Singleton.beesList.add(mBee);
+                Bee mBee = new BeeBig(rPoint.x, rPoint.y, timeOfLifeBig, time);
+                SingletonObjects.beesList.add(mBee);
+                SingletonID.beesSet.add(mBee.getID());
+                SingletonTimeBorn.beesMap.put(mBee.getID(), mBee.getTimeOfBorn());
             }
         }
+        remove(time);
         firstFrame.beesDraw();
         firstFrame.updateTime(time);
     }
@@ -87,7 +96,9 @@ public class Habitat {
                 update(time);
             }
         };
-        Singleton.beesList = new ArrayList<>();
+        SingletonObjects.beesList = new ArrayList<>();
+        SingletonTimeBorn.beesMap = new TreeMap<>();
+        SingletonID.beesSet = new HashSet<>();
         time = 0;
     }
 
@@ -103,4 +114,17 @@ public class Habitat {
             }
         };
     }
+
+    private void remove(int time) {
+        for (int i = 0; i < SingletonObjects.beesList.size(); i++) {
+            if ((SingletonObjects.beesList.get(i).getTimeOfBorn() + SingletonObjects.beesList.get(i).getTimeOfLife()) == time) {
+                int tempId = SingletonObjects.beesList.get(i).getID();
+                SingletonObjects.beesList.remove(i);
+                SingletonID.beesSet.remove(tempId);
+                SingletonTimeBorn.beesMap.remove(tempId);
+                i--;
+            }
+        }
+    }
+
 }

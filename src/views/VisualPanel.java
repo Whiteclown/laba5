@@ -1,11 +1,10 @@
 package views;
 
 import Bees.Bee;
-import Habitat.Singleton;
+import Habitat.SingletonObjects;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 
 public class VisualPanel extends JPanel {
     public VisualPanel(){
@@ -19,8 +18,8 @@ public class VisualPanel extends JPanel {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        for (int i = 0; i < Singleton.beesList.size(); i++){
-            Bee bee = Singleton.beesList.get(i);
+        for (int i = 0; i < SingletonObjects.beesList.size(); i++){
+            Bee bee = SingletonObjects.beesList.get(i);
             g.drawImage(bee.getImage(), bee.getX(), bee.getY(), null);
         }
     }

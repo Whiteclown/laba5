@@ -4,16 +4,16 @@ import Bees.Bee;
 
 import java.util.ArrayList;
 
-public class Singleton {
+public class SingletonObjects {
     public static ArrayList<Bee> beesList;
-    private static Singleton instance;
-    private Singleton(){
+    private static SingletonObjects instance;
+    private SingletonObjects(){
         beesList = new ArrayList<>();
     }
 
-    public static Singleton getInstance() {
+    public static SingletonObjects getInstance() {
         if (instance == null){
-            instance = new Singleton();
+            instance = new SingletonObjects();
         }
         return instance;
     }
