@@ -489,7 +489,9 @@ public class FirstFrame extends JFrame implements KeyListener {
     class CurrentObjectsActionListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
+            habitat.pauseTimer();
             createCurrentObjectsDialog();
+            habitat.startBorn();
         }
     }
 
@@ -615,7 +617,7 @@ public class FirstFrame extends JFrame implements KeyListener {
             Set set = SingletonTimeBorn.beesMap.entrySet();
             for (Object o : set) {
                 Map.Entry e = (Map.Entry) o;
-                text = text + "ID: " + e.getKey() + " Время рождения: " + e.getValue() + "\n";
+                text = text + "ID: " + e.getKey() + " Время рождения: " + e.getValue() + " ";
             }
             jTextPane.setText(text);
         }
