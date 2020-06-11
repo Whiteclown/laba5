@@ -7,6 +7,8 @@ import Habitat.Habitat;
 import Habitat.SingletonTimeBorn;
 import Habitat.SingletonID;
 import Habitat.SingletonObjects;
+import Habitat.BeeWorkAI;
+import Habitat.BeeBigAI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,6 +18,8 @@ import java.util.Set;
 
 public class FirstFrame extends JFrame implements KeyListener {
     VisualPanel visualPanel;
+    BeeWorkAI beeWorkAI;
+    BeeBigAI beeBigAI;
     ControlPanel controlPanel;
     Habitat habitat;
     JLabel timeLabel;
@@ -59,6 +63,8 @@ public class FirstFrame extends JFrame implements KeyListener {
         habitat = new Habitat(5,3, 0.8, 0.5, this);
         visualPanel = new VisualPanel();
         controlPanel = new ControlPanel();
+        beeWorkAI = new BeeWorkAI("Workers", visualPanel);
+        beeBigAI = new BeeBigAI("Bigers", visualPanel);
         BeginActionListener beginActionListener = new BeginActionListener();
         StopActionListener stopActionListener = new StopActionListener();
         ShowTimeActionListener showTimeActionListener = new ShowTimeActionListener();
@@ -116,13 +122,13 @@ public class FirstFrame extends JFrame implements KeyListener {
         JLabel jLabelN1 = new JLabel("Трутни");
         jLabelN1.setPreferredSize(new Dimension(50, 20));
         controlPanel.add(jLabelN1);
-        jTextFieldN1 = new JTextField("5");
+        jTextFieldN1 = new JTextField("500");
         jTextFieldN1.setPreferredSize(new Dimension(40, 20));
         controlPanel.add(jTextFieldN1);
         JLabel jLabelN2 = new JLabel("Рабочие");
         jLabelN2.setPreferredSize(new Dimension(50, 20));
         controlPanel.add(jLabelN2);
-        jTextFieldN2 = new JTextField("3");
+        jTextFieldN2 = new JTextField("2");
         jTextFieldN2.setPreferredSize(new Dimension(40, 20));
         controlPanel.add(jTextFieldN2);
         JLabel jLabelInfo = new JLabel("Прочая информация:");
@@ -146,7 +152,7 @@ public class FirstFrame extends JFrame implements KeyListener {
         JLabel jLabelTimeOfLifeWork = new JLabel("Рабочих:");
         jLabelTimeOfLifeWork.setPreferredSize(new Dimension(60, 20));
         controlPanel.add(jLabelTimeOfLifeWork);
-        jTextFieldTimeOfLifeWork = new JTextField("3");
+        jTextFieldTimeOfLifeWork = new JTextField("300");
         jTextFieldTimeOfLifeWork.setPreferredSize(new Dimension(40,20));
         controlPanel.add(jTextFieldTimeOfLifeWork);
         JLabel jLabelTimeOfLifeBig = new JLabel("Трутней:");

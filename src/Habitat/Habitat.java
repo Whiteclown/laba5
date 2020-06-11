@@ -53,7 +53,7 @@ public class Habitat {
         return new Point(x, y);
     }
 
-    public void update(int time){
+    public synchronized void update(int time){
         N1 = firstFrame.getN1();
         N2 = firstFrame.getN2();
         P = firstFrame.getP();
@@ -62,7 +62,7 @@ public class Habitat {
         timeOfLifeBig = firstFrame.getTimeOfLifeBig();
         if ((Math.random() <= P) && (time % N2 == 0)){
             Point rPoint = generatePoint();
-            Bee mBee = new BeeWork(rPoint.x, rPoint.y, timeOfLifeWork, time);
+            Bee mBee = new BeeWork(rPoint.x, rPoint.y, 0, 0, rPoint.x, rPoint.y,  timeOfLifeWork, time);
             SingletonObjects.beesList.add(mBee);
             SingletonID.beesSet.add(mBee.getID());
             SingletonTimeBorn.beesMap.put(mBee.getID(), mBee.getTimeOfBorn());
@@ -70,7 +70,8 @@ public class Habitat {
         if (BeeWork.countBeeWork != 0){
             if (((((double)BeeBig.countBeeBig) / BeeWork.countBeeWork) < K) && (time % N1 == 0)){
                 Point rPoint = generatePoint();
-                Bee mBee = new BeeBig(rPoint.x, rPoint.y, timeOfLifeBig, time);
+                Point aPoint = generatePoint();
+                Bee mBee = new BeeBig(rPoint.x, rPoint.y, aPoint.x, aPoint.y, rPoint.x, rPoint.y, timeOfLifeBig, time);
                 SingletonObjects.beesList.add(mBee);
                 SingletonID.beesSet.add(mBee.getID());
                 SingletonTimeBorn.beesMap.put(mBee.getID(), mBee.getTimeOfBorn());
@@ -126,5 +127,6 @@ public class Habitat {
             }
         }
     }
+
 
 }
