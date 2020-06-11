@@ -8,6 +8,7 @@ import static java.lang.Math.sqrt;
 
 public class BeeWorkAI extends BaseAI{
     private VisualPanel visualPanel;
+    public static boolean waiting = false;
     int tempX, tempY, tempX0, tempY0, tempXd, tempYd, tempX1, tempY1;
     int tempT, V = 1;
 
@@ -19,7 +20,11 @@ public class BeeWorkAI extends BaseAI{
 
     @Override
     public synchronized void run() {
-        while (true){
+        while (BaseAI.movement) {
+            while (waiting) {
+                try { wait(); }
+                catch (InterruptedException e) { System.out.println("Ошибка остановки потока грузовых машин!"); }
+            }
             if (SingletonObjects.beesList.size() != 0){
                 for (int i = 0; i < SingletonObjects.beesList.size(); i++){
                     if (SingletonObjects.beesList.get(i) instanceof BeeBig){

@@ -9,6 +9,7 @@ import Habitat.SingletonID;
 import Habitat.SingletonObjects;
 import Habitat.BeeWorkAI;
 import Habitat.BeeBigAI;
+import Habitat.BaseAI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -58,6 +59,11 @@ public class FirstFrame extends JFrame implements KeyListener {
     boolean timeVisible = true;
     int time;
     boolean isShowInfo = false;
+    boolean threadWorkTurningOn = true;
+    boolean threadBigTurningOn = true;
+    JCheckBox checkThreadWork, checkThreadBig;
+    JLabel priorityWorkThread, priorityBigThread;
+    JComboBox inputPriorityWorkThread, inputPriorityBigThread;
 
     public FirstFrame(){
         habitat = new Habitat(5,3, 0.8, 0.5, this);
@@ -71,6 +77,8 @@ public class FirstFrame extends JFrame implements KeyListener {
         HideTimeActionListener hideTimeActionListener = new HideTimeActionListener();
         ShowInfoItemListener showInfoItemListener = new ShowInfoItemListener();
         CurrentObjectsActionListener currentObjectsActionListener = new CurrentObjectsActionListener();
+        CheckThreadWorkListener checkThreadWorkListener = new CheckThreadWorkListener();
+        CheckThreadBigListener checkThreadBigListener = new CheckThreadBigListener();
 
         setTitle("Bees");
         Dimension dimensionFirstFrame = new Dimension(habitat.getWIDTH(), habitat.getHEIGHT());
@@ -137,12 +145,14 @@ public class FirstFrame extends JFrame implements KeyListener {
         jLabelP.setPreferredSize(new Dimension(60, 20));
         controlPanel.add(jLabelP);
         jComboBoxP = new JComboBox(items);
+        jComboBoxP.setSelectedIndex(7);
         jComboBoxP.setPreferredSize(new Dimension(60, 20));
         controlPanel.add(jComboBoxP);
         JLabel jLabelK = new JLabel("% трутней");
         jLabelK.setPreferredSize(new Dimension(60, 20));
         controlPanel.add(jLabelK);
         jComboBoxK = new JComboBox(items);
+        jComboBoxK.setSelectedIndex(4);
         jComboBoxK.setPreferredSize(new Dimension(60, 20));
         controlPanel.add(jComboBoxK);
         //добавил
@@ -165,9 +175,31 @@ public class FirstFrame extends JFrame implements KeyListener {
         buttonCurrentObjects = new JButton("Текущие объекты");
         buttonCurrentObjects.addActionListener(currentObjectsActionListener);
         buttonCurrentObjects.setFocusable(false);
-        buttonCurrentObjects.setEnabled(true);
+        buttonCurrentObjects.setEnabled(false);
         controlPanel.add(buttonCurrentObjects);
-
+        //threads
+        checkThreadWork = new JCheckBox("Рабочие", true);
+        checkThreadWork.setFocusable(false);
+        checkThreadWork.addActionListener(checkThreadWorkListener);
+        checkThreadBig = new JCheckBox("Трутни", true);
+        checkThreadBig.setFocusable(false);
+        checkThreadBig.addActionListener(checkThreadBigListener);
+        controlPanel.add(checkThreadWork);
+        controlPanel.add(checkThreadBig);
+        priorityWorkThread = new JLabel("Приоритет Р.");
+        priorityWorkThread.setFocusable(false);
+        inputPriorityWorkThread = new JComboBox(items);
+        inputPriorityWorkThread.setFocusable(false);
+        inputPriorityWorkThread.setSelectedIndex(4);
+        controlPanel.add(priorityWorkThread);
+        controlPanel.add(inputPriorityWorkThread);
+        priorityBigThread = new JLabel("Приоритет Т.");
+        priorityBigThread.setFocusable(false);
+        inputPriorityBigThread = new JComboBox(items);
+        inputPriorityBigThread.setFocusable(false);
+        inputPriorityBigThread.setSelectedIndex(4);
+        controlPanel.add(priorityBigThread);
+        controlPanel.add(inputPriorityBigThread);
 
         //панель визуализации
         visualPanel.setPreferredSize(new Dimension(dimensionFirstFrame.width - controlSize.width, dimensionFirstFrame.height));
@@ -189,6 +221,19 @@ public class FirstFrame extends JFrame implements KeyListener {
         jTextFieldTimeOfLifeBig.addKeyListener(this);
         jComboBoxP.addKeyListener(this);
         jComboBoxK.addKeyListener(this);
+
+        inputPriorityWorkThread.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                beeWorkAI.setPriority(inputPriorityWorkThread.getSelectedIndex());
+            }
+        });
+        inputPriorityBigThread.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                beeBigAI.setPriority(inputPriorityBigThread.getSelectedIndex());
+            }
+        });
 
         timeLabel = new JLabel(" ", SwingConstants.CENTER);
         add(timeLabel, BorderLayout.NORTH);
@@ -228,18 +273,27 @@ public class FirstFrame extends JFrame implements KeyListener {
                 jComboBoxK.setEnabled(false);
                 jMenuItemBegin.setEnabled(false);
                 jMenuItemStop.setEnabled(true);
+                buttonCurrentObjects.setEnabled(true);
+                BaseAI.movement = true;
+                beeWorkAI = new BeeWorkAI("Workers", visualPanel);
+                beeBigAI = new BeeBigAI("Bigers", visualPanel);
                 habitat.startBorn();
                 this.requestFocus();
                 break;
             case KeyEvent.VK_E:
                 if (isShowInfo){
+                    BaseAI.movement = false;
                     habitat.pauseTimer();
                     createDialogWindow();
                     if (isContinue){
+                        BaseAI.movement = true;
+                        beeWorkAI = new BeeWorkAI("Workers", visualPanel);
+                        beeBigAI = new BeeBigAI("Bigers", visualPanel);
                         habitat.startBorn();
                         break;
                     }
                 }
+                BaseAI.movement = false;
                 habitat.stopBorn();
                 jComboBoxP.setEnabled(true);
                 buttonBegin.setEnabled(true);
@@ -251,6 +305,7 @@ public class FirstFrame extends JFrame implements KeyListener {
                 jComboBoxK.setEnabled(true);
                 jMenuItemBegin.setEnabled(true);
                 jMenuItemStop.setEnabled(false);
+                buttonCurrentObjects.setEnabled(false);
                 BeeWork.countBeeWork = 0;
                 BeeBig.countBeeBig = 0;
                 Bee.countBees = 0;
@@ -351,7 +406,6 @@ public class FirstFrame extends JFrame implements KeyListener {
         file.add(exit);
 
 
-        //Разобрать
         jMenuItemBegin.addActionListener(new ActionListener()
         {
             @Override
@@ -366,6 +420,10 @@ public class FirstFrame extends JFrame implements KeyListener {
                 jTextFieldTimeOfLifeBig.setEditable(false);
                 jComboBoxK.setEnabled(false);
                 jComboBoxP.setEnabled(false);
+                buttonCurrentObjects.setEnabled(true);
+                BaseAI.movement = true;
+                beeWorkAI = new BeeWorkAI("Workers", visualPanel);
+                beeBigAI = new BeeBigAI("Bigers", visualPanel);
                 habitat.startBorn();
             }
         });
@@ -374,13 +432,18 @@ public class FirstFrame extends JFrame implements KeyListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (isShowInfo){
+                    BaseAI.movement = false;
                     habitat.pauseTimer();
                     createDialogWindow();
                     if (isContinue){
+                        BaseAI.movement = true;
+                        beeWorkAI = new BeeWorkAI("Workers", visualPanel);
+                        beeBigAI = new BeeBigAI("Bigers", visualPanel);
                         habitat.startBorn();
                         return;
                     }
                 }
+                BaseAI.movement = false;
                 habitat.stopBorn();
                 buttonBegin.setEnabled(true);
                 buttonStop.setEnabled(false);
@@ -392,6 +455,7 @@ public class FirstFrame extends JFrame implements KeyListener {
                 jTextFieldTimeOfLifeBig.setEditable(true);
                 jComboBoxK.setEnabled(true);
                 jComboBoxP.setEnabled(true);
+                buttonCurrentObjects.setEnabled(false);
                 BeeWork.countBeeWork = 0;
                 BeeBig.countBeeBig = 0;
                 Bee.countBees = 0;
@@ -459,7 +523,35 @@ public class FirstFrame extends JFrame implements KeyListener {
             jMenuItemBegin.setEnabled(false);
             jMenuItemStop.setEnabled(true);
             jComboBoxP.setEnabled(false);
+            buttonCurrentObjects.setEnabled(true);
+            BaseAI.movement = true;
+            beeWorkAI = new BeeWorkAI("Workers", visualPanel);
+            beeBigAI = new BeeBigAI("Bigers", visualPanel);
             habitat.startBorn();
+        }
+    }
+
+    class CheckThreadWorkListener implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            checkThreadWork.setSelected(threadWorkTurningOn = !threadWorkTurningOn);
+            if(threadWorkTurningOn) {
+                BeeWorkAI.waiting = false;
+                beeWorkAI.continueThread();
+            }
+            else BeeWorkAI.waiting = true;
+        }
+    }
+
+    class CheckThreadBigListener implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            checkThreadBig.setSelected(threadBigTurningOn = !threadBigTurningOn);
+            if(threadBigTurningOn) {
+                BeeBigAI.waiting = false;
+                beeBigAI.continueThread();
+            }
+            else BeeBigAI.waiting = true;
         }
     }
 
@@ -468,13 +560,18 @@ public class FirstFrame extends JFrame implements KeyListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (isShowInfo){
+                BaseAI.movement = false;
                 habitat.pauseTimer();
                 createDialogWindow();
                 if (isContinue){
+                    BaseAI.movement = true;
+                    beeWorkAI = new BeeWorkAI("Workers", visualPanel);
+                    beeBigAI = new BeeBigAI("Bigers", visualPanel);
                     habitat.startBorn();
                     return;
                 }
             }
+            BaseAI.movement = false;
             habitat.stopBorn();
             buttonBegin.setEnabled(true);
             buttonStop.setEnabled(false);
@@ -486,6 +583,7 @@ public class FirstFrame extends JFrame implements KeyListener {
             jMenuItemBegin.setEnabled(true);
             jMenuItemStop.setEnabled(false);
             jComboBoxP.setEnabled(true);
+            buttonCurrentObjects.setEnabled(false);
             BeeWork.countBeeWork = 0;
             BeeBig.countBeeBig = 0;
             Bee.countBees = 0;
