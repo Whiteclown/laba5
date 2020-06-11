@@ -67,7 +67,7 @@ public class Habitat {
             SingletonID.beesSet.add(mBee.getID());
             SingletonTimeBorn.beesMap.put(mBee.getID(), mBee.getTimeOfBorn());
         }
-        if (BeeWork.countBeeWork != 0){
+        if ((BeeWork.countBeeWork != 0)){
             if (((((double)BeeBig.countBeeBig) / BeeWork.countBeeWork) < K) && (time % N1 == 0)){
                 Point rPoint = generatePoint();
                 Point aPoint = generatePoint();

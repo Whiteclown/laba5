@@ -122,7 +122,7 @@ public class FirstFrame extends JFrame implements KeyListener {
         JLabel jLabelN1 = new JLabel("Трутни");
         jLabelN1.setPreferredSize(new Dimension(50, 20));
         controlPanel.add(jLabelN1);
-        jTextFieldN1 = new JTextField("500");
+        jTextFieldN1 = new JTextField("2");
         jTextFieldN1.setPreferredSize(new Dimension(40, 20));
         controlPanel.add(jTextFieldN1);
         JLabel jLabelN2 = new JLabel("Рабочие");
@@ -152,7 +152,7 @@ public class FirstFrame extends JFrame implements KeyListener {
         JLabel jLabelTimeOfLifeWork = new JLabel("Рабочих:");
         jLabelTimeOfLifeWork.setPreferredSize(new Dimension(60, 20));
         controlPanel.add(jLabelTimeOfLifeWork);
-        jTextFieldTimeOfLifeWork = new JTextField("300");
+        jTextFieldTimeOfLifeWork = new JTextField("6");
         jTextFieldTimeOfLifeWork.setPreferredSize(new Dimension(40,20));
         controlPanel.add(jTextFieldTimeOfLifeWork);
         JLabel jLabelTimeOfLifeBig = new JLabel("Трутней:");

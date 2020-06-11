@@ -11,14 +11,14 @@ abstract public class Bee implements IBehaviour{
     private int timeOfBorn;
     public static int countBees = 0;
 
-    Bee(int x0, int y0, int x1, int y1, int x, int y, int timeOfLife, int timeOfBorn){
+    Bee(int x0, int y0, int x1, int y1, int x, int y, int timeOfLife, int timeOfBorn, int timeFromStart){
         this.x0 = x0;
         this.y0 = y0;
         this.x1 = x1;
         this.y1 = y1;
         this.x = x;
         this.y = y;
-        this.timeFromStart = 0;
+        this.timeFromStart = timeFromStart;
         this.timeOfBorn = timeOfBorn;
         this.timeOfLife = timeOfLife;
         do {

@@ -10,7 +10,7 @@ public class BeeBig extends Bee {
     static public Image image;
 
     public BeeBig(int x0, int y0, int x1, int y1, int x, int y, int timeOfLife, int timeOfBorn){
-        super(x0, y0, x1, y1, x, y, timeOfLife, timeOfBorn);
+        super(x0, y0, x1, y1, x, y, timeOfLife, timeOfBorn, 1);
         countBeeBig++;
         countBees++;
     }

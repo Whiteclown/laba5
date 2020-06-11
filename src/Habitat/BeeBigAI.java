@@ -39,26 +39,18 @@ public class BeeBigAI extends BaseAI{
                     tempT = bee.getTimeFromStart();
                     tempXd = tempX1 - tempX0;
                     tempYd = tempY1 - tempY0;
-                    tempX = (int) (tempX0 + ((tempXd / sqrt(tempXd^2 + tempYd^2)) * V * tempT));
-                    tempY = (int) (tempY0 + ((tempYd / sqrt(tempXd^2 + tempYd^2)) * V * tempT));
+                    tempX = tempX0 + (int)((tempXd / sqrt(tempXd^2 + tempYd^2)) * V * tempT);
+                    tempY = tempY0 + (int)((tempYd / sqrt(tempXd^2 + tempYd^2)) * V * tempT);
                     bee.setX(tempX);
                     bee.setY(tempY);
-                    System.out.println("F");
-                    /*if (tempT > Math.abs(sqrt((tempX1 - tempX0)^2 + (tempY1 - tempY0)^2))){
-                        bee.setY0(tempY);
-                        bee.setX0(tempX);
-                        bee.setY1(tempY0);
-                        bee.setX1(tempX0);
-                        tempT = -1;
-                    }*/
                     if (tempT % N == 0){
-                        int xp = (int) Math.random() * 600;
-                        int yp = (int) Math.random() * 600;
+                        int xp = (int) (Math.random() * 600);
+                        int yp = (int) (Math.random() * 600);
                         bee.setY0(tempY);
                         bee.setX0(tempX);
                         bee.setY1(yp);
                         bee.setX1(xp);
-                        tempT = -1;
+                        tempT = 0;
                     }
                     tempT++;
                     bee.setTimeFromStart(tempT);

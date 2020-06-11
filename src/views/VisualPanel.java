@@ -11,7 +11,7 @@ public class VisualPanel extends JPanel {
         super();
     }
 
-    public synchronized void paintBee(){
+    public void paintBee(){
         repaint();
     }
 
