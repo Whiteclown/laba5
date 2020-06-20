@@ -3,8 +3,9 @@ package Bees;
 import Habitat.SingletonID;
 
 import java.awt.*;
+import java.io.Serializable;
 
-abstract public class Bee implements IBehaviour{
+abstract public class Bee implements IBehaviour, Serializable {
     private int x, y, x0, y0, x1, y1;
     private int id, timeFromStart;
     private int timeOfLife;
@@ -115,5 +116,9 @@ abstract public class Bee implements IBehaviour{
 
     public void setX1(int x1) {
         this.x1 = x1;
+    }
+
+    public static void setCountBees(int countBees) {
+        Bee.countBees = countBees;
     }
 }

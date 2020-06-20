@@ -69,6 +69,8 @@ public class FirstFrame extends JFrame implements KeyListener {
     JCheckBox checkThreadWork, checkThreadBig;
     JLabel priorityWorkThread, priorityBigThread;
     JComboBox inputPriorityWorkThread, inputPriorityBigThread;
+    JMenuItem saveMenuItem, loadMenuItem;
+    private JFileChooser fileChooser;
 
     public FirstFrame(){
         habitat = new Habitat(5,3, 0.8, 0.5, this);
@@ -221,6 +223,7 @@ public class FirstFrame extends JFrame implements KeyListener {
         //Меню
         JMenuBar jMenuBar = new JMenuBar();
         jMenuBar.add(createMenuFile());
+        jMenuBar.add(createFileMenu());
         jMenuBar.setSize(200, 200);
         jMenuBar.setVisible(true);
         setJMenuBar(jMenuBar);
@@ -799,28 +802,14 @@ public class FirstFrame extends JFrame implements KeyListener {
 
                             String command = new String(bytes);
                             System.out.println(command);
-                            String startAIString = "Продолжить";
-                            String stopAIString = "Остановить";
-
-                            if (command.contains(startAIString) && (command.length() - startAIString.length() - 1) > 0) {
-                                jTextAreaConsole.append("\nВозобновляем интеллектуальное поведение объектов...");
-                                threadWorkTurningOn = true;
-                                threadBigTurningOn = true;
-                                checkThreadWork.setSelected(true);
-                                checkThreadBig.setSelected(true);
-                                BeeWorkAI.waiting = false;
-                                BeeBigAI.waiting = false;
-                                beeWorkAI.continueThread();
-                                beeBigAI.continueThread();
+                            String returnCount = "Количество";
+                            String parWork = "рабочих";
+                            String parBig = "трутней";
+                            if (command.contains(returnCount) && (command.contains(parWork))) {
+                                jTextAreaConsole.append("\n" + "Work bees: " + BeeWork.countBeeWork);
                             }
-                            else if (command.contains(stopAIString) && (command.length() - stopAIString.length() - 1) > 0) {
-                                jTextAreaConsole.append("\nОстанавливаем интеллектуальное поведение объектов...");
-                                threadWorkTurningOn = false;
-                                threadBigTurningOn = false;
-                                checkThreadWork.setSelected(false);
-                                checkThreadBig.setSelected(false);
-                                BeeWorkAI.waiting = true;
-                                BeeBigAI.waiting = true;
+                            else if (command.contains(returnCount) && (command.contains(parBig))) {
+                                jTextAreaConsole.append("\n" + "Big bees: " + BeeBig.countBeeBig);
                             }
                             else { jTextAreaConsole.append("\nДанной команды не существует. Повторите ввод!"); }
 
@@ -853,6 +842,87 @@ public class FirstFrame extends JFrame implements KeyListener {
         jDialogConsole.pack();
         jDialogConsole.setLocationRelativeTo(this);
         jDialogConsole.setVisible(true);
+    }
+
+    private JMenu createFileMenu() {
+        JMenu jMenu = new JMenu("Файл");
+        saveMenuItem = new JMenuItem("Сохранить");
+        loadMenuItem = new JMenuItem("Загрузить");
+
+        saveMenuItem.setEnabled(true);
+        loadMenuItem.setEnabled(true);
+
+        saveMenuItem.addActionListener(e -> {
+            BeeWorkAI.waiting = true;
+            BeeBigAI.waiting = true;
+            habitat.pauseTimer();
+
+            fileChooser = new JFileChooser("src");
+            fileChooser.setDialogTitle("Сохранение файла");
+            fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            if(fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
+                habitat.saveFile(fileChooser.getSelectedFile());
+            }
+            habitat.stopBorn();
+
+            BeeWorkAI.waiting = false;
+            BeeBigAI.waiting = false;
+
+            buttonBegin.setEnabled(true);
+            buttonStop.setEnabled(false);
+            jTextFieldN1.setEditable(true);
+            jTextFieldN2.setEditable(true);
+            jTextFieldTimeOfLifeBig.setEditable(true);
+            jTextFieldTimeOfLifeWork.setEditable(true);
+            jComboBoxK.setEnabled(true);
+            jMenuItemBegin.setEnabled(true);
+            jMenuItemStop.setEnabled(false);
+            jComboBoxP.setEnabled(true);
+            buttonCurrentObjects.setEnabled(false);
+        });
+        loadMenuItem.addActionListener(e -> {
+            if(time != 0) {
+                BeeWorkAI.waiting = true;
+                BeeBigAI.waiting = true;
+                habitat.stopBorn();
+
+                fileChooser = new JFileChooser("src");
+                fileChooser.setDialogTitle("Загрузка файла");
+                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+                if(fileChooser.showDialog(this, "Load") == JFileChooser.APPROVE_OPTION) {
+                    habitat.loadFile(fileChooser.getSelectedFile());
+                }
+
+                beeWorkAI.waiting = false;
+                beeBigAI.waiting = false;
+
+                buttonBegin.setEnabled(true);
+                buttonStop.setEnabled(false);
+                jTextFieldN1.setEditable(true);
+                jTextFieldN2.setEditable(true);
+                jTextFieldTimeOfLifeBig.setEditable(true);
+                jTextFieldTimeOfLifeWork.setEditable(true);
+                jComboBoxK.setEnabled(true);
+                jMenuItemBegin.setEnabled(true);
+                jMenuItemStop.setEnabled(false);
+                jComboBoxP.setEnabled(true);
+                buttonCurrentObjects.setEnabled(false);
+            }
+            else {
+                fileChooser = new JFileChooser("src");
+                fileChooser.setDialogTitle("Загрузка файла");
+                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+                if(fileChooser.showDialog(this, "Load") == JFileChooser.APPROVE_OPTION){
+                    habitat.loadFile(fileChooser.getSelectedFile());
+                }
+            }
+        });
+
+        jMenu.add(saveMenuItem);
+        jMenu.add(loadMenuItem);
+        return jMenu;
     }
 
 }

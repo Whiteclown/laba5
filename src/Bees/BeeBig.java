@@ -4,8 +4,9 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 
-public class BeeBig extends Bee {
+public class BeeBig extends Bee implements Serializable {
     public static int countBeeBig = 0;
     static public Image image;
 
@@ -26,5 +27,9 @@ public class BeeBig extends Bee {
     @Override
     public Image getImage() {
         return image;
+    }
+
+    public static void setCountBeeBig(int countBeeBig) {
+        BeeBig.countBeeBig = countBeeBig;
     }
 }

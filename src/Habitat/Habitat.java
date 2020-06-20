@@ -6,6 +6,7 @@ import Bees.BeeWork;
 import views.FirstFrame;
 
 import java.awt.*;
+import java.io.*;
 import java.util.*;
 
 public class Habitat {
@@ -128,5 +129,64 @@ public class Habitat {
         }
     }
 
+    synchronized public void saveFile(File file) {
+        ObjectOutputStream objectOutputStream = null;
+
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            if (fileOutputStream != null) {
+                objectOutputStream = new ObjectOutputStream(fileOutputStream);
+                Serialization serialization = new Serialization();
+                objectOutputStream.writeObject(serialization);
+            }
+        }
+        catch (FileNotFoundException e) { e.printStackTrace(); }
+        catch (IOException e) { e.printStackTrace(); }
+        finally {
+            if (objectOutputStream != null) {
+                try { objectOutputStream.close(); }
+                catch (IOException e) { e.printStackTrace(); }
+            }
+        }
+    }
+
+    synchronized public void loadFile(File file) {
+        Bee.setCountBees(0);
+        BeeBig.setCountBeeBig(0);
+        BeeWork.setCountBeeWork(0);
+        SingletonObjects.beesList.clear();
+        SingletonID.beesSet.clear();
+        SingletonTimeBorn.beesMap.clear();
+        ObjectInputStream objectInputStream = null;
+
+        try {
+            FileInputStream fileInputStream = new FileInputStream(file);
+            if(fileInputStream != null) {
+                objectInputStream = new ObjectInputStream(fileInputStream);
+                Serialization serialization = (Serialization) objectInputStream.readObject();
+                for(int i = 0; i < serialization.beesList.size(); i++) {
+                    if(serialization.beesList.get(i) instanceof BeeWork) {
+                        Bee beeWork = new BeeWork(serialization.beesList.get(i).getX0(), serialization.beesList.get(i).getY0(), serialization.beesList.get(i).getX1(), serialization.beesList.get(i).getY1(), serialization.beesList.get(i).getX(), serialization.beesList.get(i).getY(), serialization.beesList.get(i).getTimeOfLife(), time);
+                        SingletonObjects.beesList.add(beeWork);
+                        SingletonID.beesSet.add(beeWork.getID());
+                        SingletonTimeBorn.beesMap.put(beeWork.getID(), beeWork.getTimeOfBorn());
+                    }
+                    if(serialization.beesList.get(i) instanceof BeeBig) {
+                        Bee beeBig = new BeeBig(serialization.beesList.get(i).getX0(), serialization.beesList.get(i).getY0(), serialization.beesList.get(i).getX1(), serialization.beesList.get(i).getY1(), serialization.beesList.get(i).getX(), serialization.beesList.get(i).getY(), serialization.beesList.get(i).getTimeOfLife(), time);
+                        SingletonObjects.beesList.add(beeBig);
+                        SingletonID.beesSet.add(beeBig.getID());
+                        SingletonTimeBorn.beesMap.put(beeBig.getID(), beeBig.getTimeOfBorn());
+                    }
+                }
+            }
+        }
+        catch (FileNotFoundException e) { e.printStackTrace(); }
+        catch (IOException e) { e.printStackTrace(); }
+        catch (ClassNotFoundException e) { e.printStackTrace(); }
+        finally {
+            try { objectInputStream.close(); }
+            catch (IOException e) { e.printStackTrace(); }
+        }
+    }
 
 }
