@@ -12,8 +12,12 @@ import Habitat.BeeBigAI;
 import Habitat.BaseAI;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,6 +30,7 @@ public class FirstFrame extends JFrame implements KeyListener {
     JLabel timeLabel;
     JButton buttonBegin;
     JButton buttonStop;
+    JButton buttonConsole;
     ButtonGroup buttonGroup;
     ButtonGroup buttonGroupMenu;
     JRadioButton jRadioButtonShowTime;
@@ -79,6 +84,7 @@ public class FirstFrame extends JFrame implements KeyListener {
         CurrentObjectsActionListener currentObjectsActionListener = new CurrentObjectsActionListener();
         CheckThreadWorkListener checkThreadWorkListener = new CheckThreadWorkListener();
         CheckThreadBigListener checkThreadBigListener = new CheckThreadBigListener();
+        CreateConsoleListener createConsoleListener = new CreateConsoleListener();
 
         setTitle("Bees");
         Dimension dimensionFirstFrame = new Dimension(habitat.getWIDTH(), habitat.getHEIGHT());
@@ -200,6 +206,11 @@ public class FirstFrame extends JFrame implements KeyListener {
         inputPriorityBigThread.setSelectedIndex(4);
         controlPanel.add(priorityBigThread);
         controlPanel.add(inputPriorityBigThread);
+        buttonConsole = new JButton("Консоль");
+        buttonConsole.setFocusable(false);
+        buttonConsole.setEnabled(true);
+        buttonConsole.addActionListener(createConsoleListener);
+        controlPanel.add(buttonConsole);
 
         //панель визуализации
         visualPanel.setPreferredSize(new Dimension(dimensionFirstFrame.width - controlSize.width, dimensionFirstFrame.height));
@@ -531,6 +542,13 @@ public class FirstFrame extends JFrame implements KeyListener {
         }
     }
 
+    class CreateConsoleListener implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            createConsole();
+        }
+    }
+
     class CheckThreadWorkListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -735,6 +753,106 @@ public class FirstFrame extends JFrame implements KeyListener {
         jDialog.pack();
         jDialog.setLocationRelativeTo(this);
         jDialog.setVisible(true);
+    }
+
+    public void createConsole(){
+        JDialog jDialogConsole = new JDialog(this, "Console", true);
+        JPanel jPanelConsole = new JPanel();
+        jPanelConsole.setLayout(new BorderLayout());
+        JTextArea jTextAreaConsole = new JTextArea();
+        jTextAreaConsole.setBackground(Color.BLACK);
+        jTextAreaConsole.setForeground(Color.WHITE);
+        jTextAreaConsole.setPreferredSize(new Dimension(300, 300));
+        jPanelConsole.add(jTextAreaConsole);
+        jDialogConsole.add(jPanelConsole);
+        jTextAreaConsole.addKeyListener(new KeyAdapter() {
+            @Override
+            synchronized public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER){
+                    try {
+                    PipedOutputStream pipedOutputStream = new PipedOutputStream();
+                    PipedInputStream pipedInputStream = new PipedInputStream(pipedOutputStream);
+                    Runnable runOut = new Runnable() {
+                        @Override
+                        public void run() {
+                            int offset = 0;
+                            try {
+                                offset = jTextAreaConsole.getLineOfOffset(jTextAreaConsole.getCaretPosition());
+                                int start = jTextAreaConsole.getLineStartOffset(offset);
+                                int end = jTextAreaConsole.getLineEndOffset(offset);
+                                String command = jTextAreaConsole.getText(start, end - start);
+                                pipedOutputStream.write(command.getBytes());
+                            }
+                            catch (BadLocationException ex) { ex.printStackTrace(); }
+                            catch (IOException ex) { ex.printStackTrace(); }
+                        }
+                    };
+                    Thread outThread = new Thread(runOut);
+                    outThread.start();
+
+                    Runnable runIn = new Runnable() {
+                        @Override
+                        public void run() {
+                            byte[] bytes = new byte[100];
+                            try { pipedInputStream.read(bytes); }
+                            catch (IOException ex) { ex.printStackTrace(); }
+
+                            String command = new String(bytes);
+                            System.out.println(command);
+                            String startAIString = "Продолжить";
+                            String stopAIString = "Остановить";
+
+                            if (command.contains(startAIString) && (command.length() - startAIString.length() - 1) > 0) {
+                                jTextAreaConsole.append("\nВозобновляем интеллектуальное поведение объектов...");
+                                threadWorkTurningOn = true;
+                                threadBigTurningOn = true;
+                                checkThreadWork.setSelected(true);
+                                checkThreadBig.setSelected(true);
+                                BeeWorkAI.waiting = false;
+                                BeeBigAI.waiting = false;
+                                beeWorkAI.continueThread();
+                                beeBigAI.continueThread();
+                            }
+                            else if (command.contains(stopAIString) && (command.length() - stopAIString.length() - 1) > 0) {
+                                jTextAreaConsole.append("\nОстанавливаем интеллектуальное поведение объектов...");
+                                threadWorkTurningOn = false;
+                                threadBigTurningOn = false;
+                                checkThreadWork.setSelected(false);
+                                checkThreadBig.setSelected(false);
+                                BeeWorkAI.waiting = true;
+                                BeeBigAI.waiting = true;
+                            }
+                            else { jTextAreaConsole.append("\nДанной команды не существует. Повторите ввод!"); }
+
+                            jTextAreaConsole.setCaretPosition(jTextAreaConsole.getText().length());
+                        }
+                    };
+                    Thread inThread = new Thread(runIn);
+                    inThread.start();
+
+                    try {
+                        Thread.sleep(50);
+                        pipedOutputStream.close();
+                        pipedInputStream.close();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
+                } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+
+                }
+        }
+    });
+
+        jDialogConsole.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        jDialogConsole.setPreferredSize(new Dimension(300, 300));
+        jDialogConsole.setResizable(false);
+        jDialogConsole.pack();
+        jDialogConsole.setLocationRelativeTo(this);
+        jDialogConsole.setVisible(true);
     }
 
 }
