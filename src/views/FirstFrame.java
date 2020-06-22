@@ -15,9 +15,7 @@ import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
+import java.io.*;
 import java.util.Map;
 import java.util.Set;
 
@@ -228,6 +226,21 @@ public class FirstFrame extends JFrame implements KeyListener {
         jMenuBar.setVisible(true);
         setJMenuBar(jMenuBar);
 
+        try {
+            FileReader fileReader = new FileReader("src/Properties.txt");
+            BufferedReader reader = new BufferedReader(fileReader);
+
+            jTextFieldN1 = new JTextField("" + Integer.parseInt(reader.readLine()));
+            jTextFieldN2 = new JTextField("" + Integer.parseInt(reader.readLine()));
+            jTextFieldTimeOfLifeWork = new JTextField("" + Integer.parseInt(reader.readLine()));
+            jTextFieldTimeOfLifeBig = new JTextField("" + Integer.parseInt(reader.readLine()));
+            jComboBoxP.setSelectedIndex(Integer.parseInt(reader.readLine()) / 10);
+            jComboBoxK.setSelectedIndex(Integer.parseInt(reader.readLine()) / 10);
+
+            reader.close();
+        }
+        catch (IOException e1) { e1.printStackTrace(); }
+
         addKeyListener(this);
         jTextFieldN1.addKeyListener(this);
         jTextFieldN2.addKeyListener(this);
@@ -246,6 +259,32 @@ public class FirstFrame extends JFrame implements KeyListener {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 beeBigAI.setPriority(inputPriorityBigThread.getSelectedIndex());
+            }
+        });
+
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                BufferedWriter writer = null;
+                try {
+                    writer = new BufferedWriter(new FileWriter("src/Properties.txt"));
+                    writer.write("" + jTextFieldN1.getText());
+                    writer.newLine();
+                    writer.write("" + jTextFieldN2.getText());
+                    writer.newLine();
+                    writer.write("" + jTextFieldTimeOfLifeWork.getText());
+                    writer.newLine();
+                    writer.write("" + jTextFieldTimeOfLifeBig.getText());
+                    writer.newLine();
+                    writer.write("" + jComboBoxP.getSelectedIndex() * 10);
+                    writer.newLine();
+                    writer.write("" + jComboBoxK.getSelectedIndex() * 10);
+                    writer.newLine();
+                    writer.flush();
+                    writer.close();
+                }
+                catch (IOException ex) { ex.printStackTrace(); }
+                System.exit(0);
             }
         });
 
