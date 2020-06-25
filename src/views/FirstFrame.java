@@ -230,10 +230,10 @@ public class FirstFrame extends JFrame implements KeyListener {
             FileReader fileReader = new FileReader("src/Properties.txt");
             BufferedReader reader = new BufferedReader(fileReader);
 
-            jTextFieldN1 = new JTextField("" + Integer.parseInt(reader.readLine()));
-            jTextFieldN2 = new JTextField("" + Integer.parseInt(reader.readLine()));
-            jTextFieldTimeOfLifeWork = new JTextField("" + Integer.parseInt(reader.readLine()));
-            jTextFieldTimeOfLifeBig = new JTextField("" + Integer.parseInt(reader.readLine()));
+            jTextFieldN1.setText("" + Integer.parseInt(reader.readLine()));
+            jTextFieldN2.setText("" + Integer.parseInt(reader.readLine()));
+            jTextFieldTimeOfLifeWork.setText("" + Integer.parseInt(reader.readLine()));
+            jTextFieldTimeOfLifeBig.setText("" + Integer.parseInt(reader.readLine()));
             jComboBoxP.setSelectedIndex(Integer.parseInt(reader.readLine()) / 10);
             jComboBoxK.setSelectedIndex(Integer.parseInt(reader.readLine()) / 10);
 
